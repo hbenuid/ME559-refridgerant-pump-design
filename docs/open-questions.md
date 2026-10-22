@@ -1,0 +1,29 @@
+# Open questions
+
+Questions we can't answer yet, with the working assumption we use in the meantime. When one is answered, move it to
+[Answered](#answered) with the date, and add an entry to [decisions.md](decisions.md) if it settles a design choice.
+
+| ID | Question | Why it matters | Working assumption | Status |
+|---|---|---|---|---|
+| Q2 | What are the smallest practical eccentricity and rotor length, and what flow do they give? | Flow is now an output of the geometry ([D10](decisions.md)). It sets motor size, power and cost. | Method in [functional-design.md](functional-design.md#sizing). Needs a leakage model. | Team to work out |
+| Q3 | Will oil (POE) be present in the R-134a? | Oil-free means vanes and bearings run on a fluid thinner than water. Oil changes elastomer and motor-insulation compatibility. The pump is standalone, so no compressor oil arrives unless we add it on purpose. | Kept open. Design for oil-free wear (worst case) and check materials against POE too. | Open |
+| Q4 | Is 3600 RPM the actual running speed or the synchronous speed of a 2-pole motor? | An induction motor slips to about 3450–3550 RPM, which lowers flow by 1–4%. | 2-pole induction motor on 60 Hz; 3600 used as an upper bound. | Open |
+| Q6 | What electrical supply is available (voltage, phase)? | It sets the motor design and terminal, and whether starting current matters. | 208–230 V, 3-phase, common in US commercial buildings. | Not specified (2026-10-22); assumption stands |
+| Q7 | Which codes and standards apply: ASHRAE 15, UL 60335-2-34 (hermetic and semi-hermetic motor-compressors), pressure-vessel rules for the housing? | They set the design pressure, proof and burst test factors, and electrical safety requirements for the housing and terminal. | None adopted yet. | Research |
+| Q8 | The rubric shown covers 70% (4 × 17.5%). What makes up the other 30%? | It decides where effort goes. Low priority while deliverables are set aside. | — | Ask instructor |
+| Q9 | What design and proof pressure does the housing need? | The bolted housing is a pressure boundary. It sets wall thickness, bolt size and O-ring design. | 150 psig maximum operating pressure under the liquid-at-all-times assumption, with a code factor applied once Q7 is settled. | Open |
+| Q11 | Which properties of R-134a make it "easier to pump"? The course hinted at this without specifics. | It probably points at a design simplification we're expected to use. | Our reading is in [requirements.md](requirements.md#r-134a-as-a-pumped-liquid): low viscosity, clean, non-corrosive, dielectric, non-flammable. | Confirm if possible |
+| Q13 | What cost data feeds the repair-vs-swap decision: technician labour rate and hours, refrigerant handling, wear-kit cost, remanufactured unit price, core credit? | Without it, D14's life-cycle cost comparison can't be run. | — | Research |
+| Q14 | How does the pump connect to the piping: Rotalock service valves, brazed copper stubs, or bolted O-ring flanges? | It sets how fast a unit can be swapped in a basement and how many joints can leak. It also determines what form the built-in isolation valves ([D15](decisions.md)) take. | Rotalock valves are standard on semi-hermetic compressors and combine valve and connection, but nothing is chosen. | Open |
+| Q15 | How is the pump mounted: horizontal shaft on a base, or vertical shaft? | It sets thrust bearing load, vane seating at startup, footprint and service access. | Not decided. | Open |
+
+## Answered
+
+| ID | Question | Answer | Date | Decision |
+|---|---|---|---|---|
+| Q1 | The brief gives −20 °F to 150 °F as the refrigerant temperature, but R-134a at 55 psig is liquid only below 58 °F. What does the pump see? | Treat it as liquid at all times over the full range (course guidance). | 2026-10-22 | [D9](decisions.md) |
+| Q2 (system part) | What system is the pump part of? | None. It is a standalone pump that has to meet the given specs. | 2026-10-22 | [D10](decisions.md) |
+| Q5 | What does "MTBF 50,000 hours" mean for design? | Industry practice: predicted MTBF = 1/Σλᵢ ≥ 50,000 h (NSWC-11 for mechanical parts), with bearings at L10h ≥ 50,000 h, a 50,000 h vane wear allowance, and infinite-life fatigue design. (Briefly read as a literal failure rate only, D11, then reversed.) | 2026-10-22 | [D12](decisions.md) |
+| Q10 | R-134a is being phased down under the AIM Act. Is that a concern? | Out of scope. The course is replacing R-134a in the assignment next year. | 2026-10-22 | — |
+| Q12 | Does the 50,000 h MTBF cover the whole unit or only the pump mechanism? | Pump mechanism only. The motor and other purchased parts are judged separately. | 2026-10-22 | [D17](decisions.md) |
+| Q16 | Is there a noise target? | None given. Noise is minimised as a quality, with no number. | 2026-10-22 | — |
