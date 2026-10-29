@@ -24,6 +24,7 @@ One entry per decision. Never delete an entry; if a decision is reversed, add a 
 | D18 | 2026-10-22 | Tooling is amortized over 5 years of production (35,000 units) | Decided |
 | D19 | 2026-10-29 | Part numbers are assembly-coded | Decided; ranges to finalize with the part list |
 | D20 | 2026-10-29 | Fasteners appear in the BOM with torque specs, but get no drawing | Decided |
+| D21 | 2026-10-29 | Materials are chosen with Ashby's method in Granta EduPack 2026 R1, Level 3 database | Decided |
 
 ## D1: Liquid pump
 
@@ -151,3 +152,11 @@ Starting layout, to finalize once the part list exists:
 The handout exempts fasteners from drawings but says the BOM lists each part and asks for fastener torque specs. Each
 fastener is listed in the BOM by its standard designation (size, length, type, grade), with quantity and torque. It
 gets no drawing.
+
+## D21: Materials selection method
+
+Granta EduPack is available through the university, and its Limit, Tree and Chart stages carry out Ashby's
+screen-and-rank method directly. The Level 3 database is used because telling grades apart needs grade-level data
+such as fatigue strength, fracture toughness and expansion. Granta doesn't cover compatibility with R-134a and POE, or
+wear in a fluid this thin; those come from literature and supplier data. The method, the part groups and the running
+record of the screen are in [materials.md](materials.md#selection-method).

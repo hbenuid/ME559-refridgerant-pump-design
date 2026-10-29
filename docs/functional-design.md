@@ -78,6 +78,29 @@ What stops further shrinking:
   (small L) tilt more under the pressure difference across them.
 - **Shaft, bearing span and motor packaging** in the housing.
 
+## Modeling plan
+
+The calculations go up in levels of detail. Each question gets the simplest model that can answer it, and a more
+detailed model only where it could change the decision.
+
+| Level | Model | What it answers | Status |
+|---|---|---|---|
+| 0 | Ideal displacement ([calcs/displacement.py](../calcs/displacement.py)) | Flow vs. e and L | Done |
+| 1 | Chamber and leakage model: each vane pocket as a control volume, pressure vs. shaft angle, leakage through the side, tip and slot clearances, port timing | Volumetric efficiency, real flow, pressure ripple, shaft power. Sets the smallest practical pump ([Q2](open-questions.md)) and the clearance budget. | Next |
+| 2 | Vane dynamics: centrifugal force, under-vane pressure, friction and inertia on each vane | Tip contact force, lift-off, PV and wear rate. Feeds the 50,000 h wear allowance in [calcs/reliability.py](../calcs/reliability.py). | Planned |
+| 3 | Finite-element analysis | Vane, rotor and shaft fatigue ([infinite life](#fatigue)), housing stress at the design pressure ([Q9](open-questions.md)), deflections that use up clearance | Planned; tool not chosen |
+| 4 | 3D CFD with a moving mesh | Port shape, local flow losses | Only if a lower level can't answer a question |
+
+How each step is checked:
+
+- **Verification**: the code does the math right. Compare against a hand calculation.
+- **Validation**: the math matches reality. Compare against published or test data.
+
+Material properties from the Granta screen ([materials.md](materials.md#selection-in-granta)) are inputs to these
+models: expansion sets the clearance change over temperature and so the leakage, density sets the vane tip force, and
+fatigue strength sets the safety factor. In the other direction, the clearance budget from Level 1 sets how closely
+the stack materials' expansion has to match.
+
 ## Vane layout trade study
 
 Decision [D7](decisions.md) is open.
