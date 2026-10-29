@@ -18,6 +18,11 @@ unit cost = material
 No numbers yet. Collect sources for material prices, machine rates and tooling costs and cite them in
 [references.md](references.md). Build the model as a script in `calcs/` once we have them.
 
+The final presentation has to state the predicted production cost per pump, and a cost comparison document (PDF) is
+one of the supporting deliverables ([requirements.md](requirements.md#final-deliverables)). Each purchased part needs
+a vendor part number for its drawing anyway, so catalog prices or quotes for those parts can feed the purchased-parts
+line directly.
+
 ## Economic levers
 
 | Lever | Trade |

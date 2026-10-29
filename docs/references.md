@@ -9,6 +9,8 @@ Add each source when it is first used, and say what it's used for. Mark anything
   Research*, 53(6), 2498–2508. Used for R-134a properties in `calcs/`.
 - Esposito, A. *Fluid Power with Applications*. Pearson. Its vane pump displacement formula is compared in
   [functional-design.md](functional-design.md#displacement).
+- Course handout, *Final Report and Presentation* (headed ME500). Not kept in the repo; its content is recorded in
+  [final deliverables](requirements.md#final-deliverables).
 
 ## To consult
 

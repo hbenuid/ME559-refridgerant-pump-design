@@ -5,6 +5,9 @@ Rubric: *ability to choose appropriate materials* (17.5%).
 Nothing is selected yet. Candidates below are starting points to research; material properties are typical values to
 confirm against a specific grade's data sheet.
 
+A material comparison document (PDF) is one of the [final deliverables](requirements.md#final-deliverables). The
+candidate tables here are its starting point.
+
 ## What every material must satisfy
 
 - **Compatibility with R-134a**, and with POE oil if oil is present ([Q3](open-questions.md)). This covers swelling,
@@ -72,3 +75,16 @@ at all. These are general rules; confirm values per grade (Shigley's is the stan
 | Aluminium alloys | **No true endurance limit.** Fatigue strength is usually quoted at 5 × 10⁸ cycles and keeps falling beyond that. | Keep out of cyclically stressed parts. Acceptable for low-stress housings. |
 | Polymers (PEEK) | Fatigue strength and modulus drop with temperature, and the material creeps. | Check vanes at 150 °F, not at room temperature. |
 | Carbon-graphite | Brittle; fatigue cracks grow from flaws. | Keep vane bending low with short extension from the slot. |
+
+## Consumables
+
+The assembly BOM lists every consumable and where it's used
+([final deliverables](requirements.md#final-deliverables)). Inside the housing, a consumable sits in liquid R-134a
+for the life of the pump, so it needs the same compatibility check as a structural material
+([Q21](open-questions.md)).
+
+| Consumable | Likely use | Concern |
+|---|---|---|
+| Assembly lubricant | Wetting O-rings, vanes and bearings at assembly | Refrigeration oil (POE) is the obvious choice, but it puts oil into a pump we may design oil-free ([Q3](open-questions.md)). |
+| Thread locker | Fasteners inside the housing | Check compatibility with R-134a and POE, or use mechanical locking instead. |
+| Grease | Outside the housing | Inside, it could wash out into the refrigerant. |

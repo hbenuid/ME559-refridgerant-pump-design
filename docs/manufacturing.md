@@ -42,8 +42,36 @@ These are the features where tolerance drives performance, and so drives process
   sections, so the joints need doweled location.
 - **O-ring sealing faces**: flatness and finish at each housing joint.
 
+## Drawing requirements
+
+The [final deliverables](requirements.md#final-deliverables) require each made part's drawing to show its material
+and process, with GD&T for size, location, orientation and form. Any part made in a reusable mold or pattern also
+shows the parting line, draft angle, and gate and ejector locations, where they apply.
+
+### Mold and pattern callouts by process
+
+| Process | Callouts | Notes |
+|---|---|---|
+| Sand casting (housing sections, iron pump body, ring or plate blanks) | Parting line, draft, gates and risers, cores, machining allowance on machined faces | The pattern is reusable; the sand mold isn't. Sand casting has no ejectors. |
+| Die casting (aluminium pump body) | Parting line, draft, gates, ejector pin locations, overflows | Every callout in the handout applies. |
+| Injection molding (PEEK vanes) | Parting line, draft, gate, ejector locations | The vanes are ground after molding, so the drawing should show which faces are as-molded and which are ground. |
+| PM compaction (rotor, ring) | Pressing direction | The die is reusable, but there is no gate, and walls parallel to the press direction normally need no draft. Whether the handout expects these callouts on PM parts is to confirm. |
+| Machined from bar, tube or strip (shaft, steel vanes) | None | Material, stock form, heat treatment and finish only. |
+
+### GD&T for the critical features
+
+| Feature | Likely controls |
+|---|---|
+| Axial clearance | Flatness and parallelism of the side-plate faces; ring width against rotor and vane length |
+| Vane slots | Slot width; parallelism of the slot walls and perpendicularity to the rotor faces |
+| Ring bore | Size, cylindricity (profile for a balanced cam ring), surface finish |
+| Bearing bores across bolted sections | Position or runout of each bore to a common datum axis set by the doweled joints |
+| O-ring sealing faces and grooves | Flatness, surface finish, groove dimensions per the O-ring maker's guide |
+
 ## Assembly and test
 
+- The assembly drawing gives a torque for every threaded fastener and lists each consumable with where it's used
+  ([final deliverables](requirements.md#final-deliverables)).
 - Clean, dry assembly: parts free of chips, oil residue and moisture before sealing.
 - Dehydrate and evacuate the housing before charging or shipping.
 - Helium leak test of the assembled housing joints.
@@ -61,3 +89,4 @@ and reuse criteria for each part.
 - Typical achievable tolerances and costs for PM rotors and rings at this size.
 - How semi-hermetic compressor manufacturers build and remanufacture their housings and motors.
 - Fixturing and in-process gauging for side clearance.
+- Whether the handout's mold callouts (draft, gates, ejectors) are expected on PM parts.

@@ -26,6 +26,7 @@ Clarifications received after the brief.
 | 2026-10-22 | R-134a has properties that make it easier to pump than other liquids (no specifics given) | Our reading is [below](#r-134a-as-a-pumped-liquid) |
 | 2026-10-22 | 80% of mechanical failures are due to fatigue | [Fatigue section](functional-design.md#fatigue) |
 | 2026-10-22 | R-134a will be replaced in the assignment next year | Regulatory phase-down is out of scope ([Q10](open-questions.md#answered)) |
+| 2026-10-29 | Final documentation and presentation handout: what is due and how it is judged | See [Final deliverables](#final-deliverables) |
 
 ## Interpretation
 
@@ -41,6 +42,7 @@ How we read the brief, as of 2026-10-22. The reasoning for each line is in [deci
 | Serviceability | Field-repairable by a refrigeration technician where life-cycle cost favours it; otherwise refurbished by the manufacturer; recyclable at end of life ([D14](decisions.md), [serviceability.md](serviceability.md)). |
 | Lubrication | Open. Unknown whether oil is present ([Q3](open-questions.md)). |
 | MTBF | Industry practice: predicted MTBF ≥ 50,000 h, with wear-out and fatigue parts sized to outlast it ([D12](decisions.md)). It applies to the pump mechanism only ([D17](decisions.md)). |
+| Duty cycle | Continuous, 8,760 h/yr, from the brief's "continuous operation". The failure figures in [functional-design.md](functional-design.md#reliability) already assume it. |
 | Production horizon | 5 years, 35,000 units, for amortizing tooling ([D18](decisions.md)). |
 | Electrical supply | Not specified. Assumed 208–230 V, 3-phase ([Q6](open-questions.md)). |
 | Noise | No target given. Minimise it as a quality, with no number. |
@@ -133,3 +135,63 @@ What this implies for the design. These are notes to research, not settled requi
   environment.
 - **Codes**: refrigerant equipment inside occupied buildings falls under safety standards such as ASHRAE 15. Which
   ones apply to a semi-hermetic pump is [Q7](open-questions.md).
+
+## Final deliverables
+
+From the course handout *Final Report and Presentation* ([references.md](references.md)). Everything is due on the
+day of the final presentation. The handout doesn't give that date ([Q19](open-questions.md)).
+
+### Drawings and CAD
+
+| Item | Requirement |
+|---|---|
+| Scope | 3D CAD models, assemblies and drawings for every part, including off-the-shelf (OTS) parts. Fasteners are the only exception. |
+| Part numbers | Every part, OTS included, has a unique part number assigned by us. The scheme is assembly-coded ([D19](decisions.md)). |
+| OTS part drawings | Overall dimensions, vendor name and vendor part number. Our part number goes in the title block; the vendor's goes in a note. |
+| Made-part drawings | Communicate design intent and show an understanding of the material and process chosen. Dimensions of size, location, orientation and form (SLOF), using GD&T where it applies. |
+| Cast or molded parts | Any part made in a reusable mold or pattern also shows the parting line, draft angle, and proposed gate and ejector locations, where they apply. |
+| Revision table | On every drawing, at "Initial Release". |
+| Assembly drawings | Exploded and unexploded views, as needed to show how the pump is assembled. |
+| BOM | A table in the upper-left corner of the assembly drawing. It lists every part (made and OTS) with its balloon number on the exploded view, our part number and the quantity. Consumables (grease, thread locker, etc.) are listed too, with where each is used. Fasteners are listed by standard designation, with torque, and get no drawing ([D20](decisions.md)). |
+| Torque specs | For every threaded fastener. They needn't be rigorous, but fastener size must suit the load. |
+| Paper copies | All part and assembly drawings printed on B-size sheets (11 × 17 in) and handed in at the presentation. |
+
+### Digital folder
+
+Uploaded to a team folder in the ME559 shared folder. The handout's ME691 is left over from another course
+([Q17](open-questions.md#answered)). Four subfolders:
+
+1. Drawings (PDF)
+2. CAD Models (STEP)
+3. Supporting Documentation: material comparisons and cost comparisons (PDF)
+4. Final Presentation (PDF)
+
+Other supporting information can be added as PDF.
+
+### Presentation
+
+- Up to 10 minutes **including Q&A**, timed.
+- Start with the project specifics: fluid, yearly production, operating pressure and temperature, duty cycle.
+- Then the final product; the material, design and manufacturing decisions; and the **predicted production cost per
+  pump**. Be ready to defend them in Q&A.
+- CAD models, animations, calculations, material choices and cost comparisons can all be shown. Pick what shows the
+  problems solved and why the solutions were right.
+
+### How it is judged
+
+The handout's criteria: "Did you make reasonable engineering choices; and excellent design, and manufacturing
+choices? Did you properly communicate those choices in your drawings, documentation, and presentation?" It gives no
+weights ([Q8](open-questions.md)).
+
+### What it means for the design
+
+| Requirement | Effect |
+|---|---|
+| OTS drawings carry a vendor part number | The motor, bearings, isolation valves, terminal and O-rings each have to end in a specific catalog part. The bearing trade ([D16](decisions.md)) and the piping connection ([Q14](open-questions.md)) end in vendor selections. |
+| Casting and molding callouts | Each process choice adds drawing content. See [manufacturing.md](manufacturing.md#drawing-requirements). |
+| GD&T | The [critical-to-function features](manufacturing.md#critical-to-function-features) are the main callouts. |
+| Torque specs | Housing bolts are sized against the design pressure, so [Q9](open-questions.md) has to be settled before the assembly drawing. |
+| Consumables in the BOM | Anything used inside the housing sits in refrigerant. See [materials.md](materials.md#consumables). |
+| Material and cost comparisons | [materials.md](materials.md) and [economics.md](economics.md) are the sources for these two supporting documents. |
+| Cost per pump | The cost model in [economics.md](economics.md) has to produce a number. |
+| Duty cycle | Continuous ([Interpretation](#interpretation)). |

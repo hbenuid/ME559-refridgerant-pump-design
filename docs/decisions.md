@@ -22,6 +22,8 @@ One entry per decision. Never delete an entry; if a decision is reversed, add a 
 | D16 | — | Bearing type: product-lubricated sleeve vs. rolling-element | **Open**: trade study in [functional-design.md](functional-design.md#bearing-trade-study) |
 | D17 | 2026-10-22 | The 50,000 h MTBF applies to the pump mechanism only | Decided |
 | D18 | 2026-10-22 | Tooling is amortized over 5 years of production (35,000 units) | Decided |
+| D19 | 2026-10-29 | Part numbers are assembly-coded | Decided; ranges to finalize with the part list |
+| D20 | 2026-10-29 | Fasteners appear in the BOM with torque specs, but get no drawing | Decided |
 
 ## D1: Liquid pump
 
@@ -129,3 +131,23 @@ separately against their suppliers' ratings. The housing O-ring joints are also 
 
 Tooling is amortized over 5 years × 7,000 units/yr = 35,000 units. This is conservative: it favours processes with
 low tooling cost, so any tooling-heavy process (powder metal, dies) has to justify itself over 35,000 units.
+
+## D19: Assembly-coded part numbers
+
+The [final deliverables](requirements.md#final-deliverables) need a unique part number of ours on every part,
+off-the-shelf parts included. Each number shows which assembly group the part belongs to, which matches the split
+between the housing and the pumping cartridge sold as the field repair kit ([serviceability.md](serviceability.md)).
+Starting layout, to finalize once the part list exists:
+
+| Range | Group |
+|---|---|
+| R3-100 | Housing |
+| R3-200 | Pumping cartridge |
+| R3-300 | Motor |
+| R3-900 | Off-the-shelf parts |
+
+## D20: Fasteners in the BOM
+
+The handout exempts fasteners from drawings but says the BOM lists each part and asks for fastener torque specs. Each
+fastener is listed in the BOM by its standard designation (size, length, type, grade), with quantity and torque. It
+gets no drawing.

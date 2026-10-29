@@ -32,7 +32,19 @@ line and what follows from it.
 | Ability to choose appropriate materials | 17.5% | [docs/materials.md](docs/materials.md) |
 | Ability to make functionally sound design choices | 17.5% | [docs/functional-design.md](docs/functional-design.md) |
 | Ability to make economically sound design choices | 17.5% | [docs/economics.md](docs/economics.md) |
-| Remaining 30% | — | Not yet known (see [open questions](docs/open-questions.md)) |
+| Remaining 30% | — | Not given. The deliverables handout also judges how well the choices are communicated ([Q8](docs/open-questions.md)) |
+
+## Final deliverables
+
+All due on the day of the final presentation (date not given yet). Full requirements are in
+[docs/requirements.md](docs/requirements.md#final-deliverables).
+
+- CAD models (STEP) and drawings for every part, off-the-shelf parts included, each with our own part number. Made
+  parts get GD&T and, if cast or molded, parting line, draft, gates and ejectors.
+- Assembly drawings with exploded views, a BOM (with consumables) and fastener torque specs.
+- Drawings on paper at B size (11 × 17 in), and as PDF.
+- Material comparisons and cost comparisons (PDF).
+- A 10-minute presentation, Q&A included, that gives the predicted production cost per pump.
 
 ## Repo map
 
