@@ -16,7 +16,7 @@ Add each source when it is first used, and say what it's used for. Mark anything
   (<https://ansyshelp.ansys.com/public/Views/Secured/Granta/v251/en/Selector/sel_edu/pass_criteria.html>), and
   *Default application settings*
   (<https://ansyshelp.ansys.com/public/Views/Secured/Granta/v261/en/Edu_Pack_Help/sel_edu/default_application_settings.html>).
-  Used in [materials.md](materials.md#stage-4-result).
+  Used in [materials.md](materials.md#approach).
 - Granta EduPack tutorial videos, YouTube playlist <https://www.youtube.com/playlist?list=PLtt6-ZgUFmMK4aApOU0A85CvaJ_udGDCe>.
   Suggested viewing order from the "Granta Video List" spreadsheet, with each video's number in the playlist:
   1. Basic Materials Selection (#10): <https://www.youtube.com/watch?v=ns1R5WSfz94>
@@ -46,6 +46,17 @@ Add each source when it is first used, and say what it's used for. Mark anything
 - Rotary refrigerant compressor patents: high-speed tool steel vanes, nitrided or CrN/DLC coated, against gray or
   alloy cast iron; HFC refrigerants lubricate poorly. US 8,939,742 (steel and cast iron sliding materials),
   US 9,169,526, US 9,644,245; US 2013/0118651 (alloy cast iron vane).
+- Liquid refrigerant pump literature (read through search summaries, verify against the documents): Buffalo Pumps
+  refrigerant pumps, low-temperature ductile iron or cast steel casing with cast iron impeller, services include
+  R-134a (<https://buffalopumps.com/index.php/download_file/view/1373/86>); Hansen HERMETIC CAM/CNF canned-motor pumps,
+  ductile iron casing, rated −60 °F to 194 °F
+  (<https://static1.squarespace.com/static/568fc9bac21b86decbc1965f/t/56eab26e07eaa03f5db7fed4/1458221680724/HermeticPump_bulletin.pdf>);
+  Cornell CB refrigeration pumps, ductile iron with 304 stainless shaft
+  (<https://www.keepsupply.com/2cb-4-2-3-1800-cornell-pump-2cb-close-coupled-pump-3hp-1800-rpm>). Used in
+  [materials.md](materials.md#check-against-refrigerant-pumps).
+- Rotary vane compressor patents: cast iron cylinder with steel or cast iron rotor and cast iron side plates (US
+  4,526,524; US 5,356,277); aluminium body cast around a sintered iron liner (US 5,133,652); nodular iron vanes (US
+  9,644,245).
 - Course handout, *Final Report and Presentation* (headed ME500). Not kept in the repo; its content is recorded in
   [final deliverables](requirements.md#final-deliverables).
 

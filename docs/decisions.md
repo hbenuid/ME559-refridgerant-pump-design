@@ -25,6 +25,8 @@ One entry per decision. Never delete an entry; if a decision is reversed, add a 
 | D19 | 2026-10-29 | Part numbers are assembly-coded | Decided; ranges to finalize with the part list |
 | D20 | 2026-10-29 | Fasteners appear in the BOM with torque specs, but get no drawing | Decided |
 | D21 | 2026-10-29 | Materials are chosen with Ashby's method in Granta EduPack 2026 R1, Level 3 database | Decided |
+| D22 | 2026-11-03 | Granta screens use only numeric requirements as Limit stages, passing on the whole record; no hand-picked families | Decided |
+| D23 | 2026-11-03 | The metal stack is screened with a fracture toughness minimum of 10 ksi·in^0.5; the all-carbon stack is judged from supplier data | Decided |
 
 ## D1: Liquid pump
 
@@ -160,3 +162,27 @@ screen-and-rank method directly. The Level 3 database is used because telling gr
 such as fatigue strength, fracture toughness and expansion. Granta doesn't cover compatibility with R-134a and POE, or
 wear in a fluid this thin; those come from literature and supplier data. The method, the part groups and the running
 record of the screen are in [materials.md](materials.md#selection-method).
+
+## D22: Requirement-only screen, whole record
+
+Each requirement that can be written as a number is a Limit stage, and every stage passes a material only if its whole
+range meets the limit. This replaces the first screen (2026-10-29), which used Granta's default "any part of record"
+rule and a Tree stage of hand-picked families.
+
+- **Whole record**: Granta stores properties as ranges. The default passes a material that only might meet a limit;
+  for example, ductile iron GJS 400-18-LT passed −20 °F although its rating runs up to 14 °F.
+- **No hand-picked families**: a Tree stage is a judgment, not a requirement, so it's harder to defend. With numbers
+  only, an unsuitable survivor shows a missing requirement, which is then added as a stage.
+
+See [materials.md](materials.md#selection-in-granta).
+
+## D23: Toughness minimum, carbon judged separately
+
+On the fracture toughness vs. price chart, metals sit above about 10 ksi·in^0.5 and glasses, ceramics, concrete, foams
+and carbon below about 5, with almost nothing between. A minimum of 10 ksi·in^0.5 (whole record) removes every
+brittle material and keeps gray iron (14.6–18.2) and the steels.
+
+The same minimum removes carbon-graphite, which real vane pumps use at low loads. Level 3 holds only generic carbon
+records ("Resin impregnated carbon", "Carbon/resin", bulk graphites), so the all-carbon stack is judged from supplier
+data on specific grades rather than in this screen. See [materials.md](materials.md#what-survives-stage-4).
+
