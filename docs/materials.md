@@ -2,12 +2,38 @@
 
 Rubric: *ability to choose appropriate materials* (17.5%).
 
-Nothing is selected yet. Selection is under way in Granta EduPack ([below](#selection-in-granta)). Candidates below
-are starting points to research; material properties are typical values to confirm against a specific grade's data
-sheet.
+Nothing is final yet. The Granta screens ([below](#selection-in-granta)) point to a leading choice for most parts,
+summarized under [Current choices](#current-choices). Candidates further down are starting points to research;
+material properties are typical values to confirm against a specific grade's data sheet.
 
 A material comparison document (PDF) is one of the [final deliverables](requirements.md#final-deliverables). The
 candidate tables here are its starting point.
+
+## Current choices
+
+As of 2026-11-05. Each part follows the same method: requirements become numeric limits in Granta, only materials sure
+to pass are kept (whole-record rule, [D22](decisions.md)), the survivors are ranked on cost charts, and the result is
+checked against what real refrigerant pumps and compressors use.
+
+| Part | Leading choice | Why | Still open |
+|---|---|---|---|
+| Cam ring | Gray cast iron | Cheapest material passing every stack requirement, by 2–4× ([Stage 6](#ranking-fatigue-strength-vs-price-stage-6)). Graphite helps under boundary lubrication. Expands like the steel shaft (about 6–7 µstrain/°F), so clearances hold over −20 °F to 150 °F. Rotary refrigerant compressors use cast iron cylinders ([check](#check-against-refrigerant-pumps)). | Grade. If the vanes are steel, the ring track has to be much harder. |
+| Side plates | Gray cast iron | Same reasons as the ring. Loads are mostly compressive with low alternating stress, so cost and wear decide. | Grade. |
+| Rotor | Gray iron or steel (e.g. AISI 4140) | Both pass the stack screen and match its expansion. Gray iron is cheaper; steel has far more fatigue strength for about 10¹⁰ cycles. | The rotor stress estimate sets a fatigue line on the Stage 6 chart. |
+| Vanes | Not chosen: carbon-graphite, filled polymers (PEEK, PAI, PPS) or tool steel | All three are used in real vane pumps, and all pass the [vane screen](#vane-screen-in-granta). Running oil-free favours carbon or filled polymer over steel. PEEK wear grades come back by hand ([D26](decisions.md)). | Read the fatigue vs. density ranking; settle oil ([Q3](open-questions.md)); supplier data for carbon grades ([D23](decisions.md)). |
+| Housing | Low-temperature ductile iron EN GJS 350-22-LT | Same price as gray iron (about 74–86 USD/ft³) with about 1.7× the yield strength and twice the toughness. Impact-tested at −40 °C under EN 1563, and the usual refrigerant pump casing material. Granta fails it only on its temperature data, so it is added back by hand ([D25](decisions.md)). | Draw the wall-cost and leak-before-break rankings against gray iron, cast aluminium and cast steel ([housing screen](#housing-screen-in-granta)). |
+| Shaft | A standard steel: AISI 4140, 4340, 416 or 420 stainless, or 17-4PH | All pass the [shaft screen](#shaft-screen-in-granta) after [D29](decisions.md) and [D30](decisions.md). Steels have a true endurance limit, which a part loaded about 10¹⁰ times needs. | Fatigue check, then pick one. |
+| O-rings, bearings, motor | Set by the supplier | Purchased parts; only compatibility with R-134a (and POE) is checked. O-rings in HNBR or neoprene, not FKM ([candidates](#candidates-by-component)). | Confirm against compatibility charts. |
+
+**Ruled out:**
+
+| Material | Where | Why |
+|---|---|---|
+| Aluminium | Ring, rotor, side plates | Expands about twice as much as the steel shaft (about 12 against 6.5 µstrain/°F), opening clearances by about 0.003 in over the range ([thermal expansion](#thermal-expansion)). No true endurance limit. |
+| Austenitic stainless | Ring, rotor, side plates | Expands about 9–10 µstrain/°F, also too far from the steel shaft. |
+| Ceramics and glasses | All structural parts | Too brittle: fracture toughness below about 5 ksi·in^0.5 ([D23](decisions.md)). |
+| Ni-Resist | Stack | Costs more than most steels and has less fatigue strength ([Stage 6](#ranking-fatigue-strength-vs-price-stage-6)). |
+| Cast lead and magnesium | Housing | Lead is weak and toxic; magnesium corrodes and is kept away from halogenated refrigerants ([D31](decisions.md)). |
 
 ## What every material must satisfy
 
