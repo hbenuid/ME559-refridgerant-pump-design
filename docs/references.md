@@ -60,6 +60,26 @@ Add each source when it is first used, and say what it's used for. Mark anything
 - Course handout, *Final Report and Presentation* (headed ME500). Not kept in the repo; its content is recorded in
   [final deliverables](requirements.md#final-deliverables).
 
+## Team notes
+
+Word documents from teammates, received 2026-11-05 and kept as-is in [notes/](../notes/). Their numbers are
+reproduced in [calcs/pressure_cases.py](../calcs/pressure_cases.py) and
+[calcs/vane_kinematics.py](../calcs/vane_kinematics.py).
+
+- *Formulas and Calculations* ([notes/formulas-and-calculations.docx](../notes/formulas-and-calculations.docx)):
+  derived speeds, centripetal acceleration, sliding distance and Archard wear budget, cycle counts, honed ring bore
+  finish. Used in [functional-design.md](functional-design.md#vane-tip-wear) and
+  [requirements.md](requirements.md#derived-values). Its wear rate (0.02 µm per km) is corrected there to 0.018 µm
+  per 1,000 km. Its 6 vanes and 3.22 in cam bore are illustrative.
+- *Key Considerations* ([notes/key-considerations.docx](../notes/key-considerations.docx)): cavitation, vapor lock,
+  a 225 psig relief valve plus thermal relief, magnetic coupling, port sizes, lubricant. Used in
+  [D33](decisions.md#d33-magnetic-drive), [Q3, Q27 and Q29](open-questions.md), and
+  [functional-design.md](functional-design.md#functional-risks).
+- *Pump Temp Analysis* ([notes/pump-temp-analysis.docx](../notes/pump-temp-analysis.docx)): a real-fluid operating
+  range (−20 °F to 50 °F at the inlet), outlet temperature rise, and the 263 psig idle pressure behind the 300 psig
+  rating. Used in [requirements.md](requirements.md#real-fluid-check) and
+  [D32](decisions.md#d32-design-pressure-300-psig-from-the-idle-case).
+
 ## To consult
 
 - Ashby, M. F. *Materials Selection in Mechanical Design*. Butterworth-Heinemann. The selection method (translate,
@@ -81,7 +101,8 @@ Add each source when it is first used, and say what it's used for. Mark anything
   source.
 - ANSI/ASHRAE Standard 15 (Safety Standard for Refrigeration Systems) and Standard 34 (refrigerant designations and
   safety classification).
-- UL 60335-2-34 (hermetic and semi-hermetic motor-compressors): check whether it applies to a semi-hermetic pump.
+- UL 60335-2-34 (hermetic and semi-hermetic motor-compressors): probably no longer applies now that the motor is
+  outside ([D33](decisions.md)); confirm.
 - Hydraulic Institute, Europump, US DOE. *Pump Life Cycle Costs: A Guide to LCC Analysis for Pumping Systems*.
   Framework for the repair-vs-swap decision in [serviceability.md](serviceability.md).
 - US EPA, Clean Air Act Section 608: refrigerant recovery and the prohibition on venting.
@@ -90,3 +111,9 @@ Add each source when it is first used, and say what it's used for. Mark anything
 - An elastomer compatibility chart (e.g. Parker O-Ring Handbook) for R-134a and POE oil.
 - A hydraulics text giving the vane pump displacement form V = 2eL(πD − zt), to confirm the derivation.
 - Manufacturer literature for canned-motor refrigerant pumps and for thin-fluid rotary vane pumps (analogs).
+- Magnetic-drive pump and coupling literature: breakaway torque sizing, containment can eddy losses, magnet
+  temperature limits ([D33](decisions.md), [Q28](open-questions.md)).
+- Relief valve practice for positive-displacement pumps and hydrostatic (trapped-liquid) relief in refrigerant
+  systems ([Q27](open-questions.md)).
+- Archard, J. F. (1953). Contact and rubbing of flat surfaces. *Journal of Applied Physics*, 24(8), 981–988. The
+  wear law behind the vane tip wear budget ([functional-design.md](functional-design.md#vane-tip-wear)).

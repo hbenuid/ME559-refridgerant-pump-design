@@ -1,7 +1,7 @@
 # ME559 Refrigerant Pump Design — Team R3
 
-A semi-hermetic rotary vane pump for liquid R-134a, designed to be field-repairable, remanufacturable and
-recyclable. This repo is the engineering notebook for the project. It gathers
+A sealless rotary vane pump for liquid R-134a, driven through a magnetic coupling, and designed to be
+field-repairable, remanufacturable and recyclable. This repo is the engineering notebook for the project. It gathers
 requirements, research, calculations and design decisions in one place.
 
 Status (2026-10-22): just starting. The concept (rotary vane) is set; nothing is sized or selected yet.
@@ -61,6 +61,7 @@ All due on the day of the final presentation (date not given yet). Full requirem
 | [docs/references.md](docs/references.md) | Sources |
 | [calcs/](calcs/) | Python calculations. Every number in the docs should trace back to a script here |
 | [data/granta/](data/granta/) | Granta EduPack Pass/Fail tables, one per selection project ([materials.md](docs/materials.md#selection-in-granta)) |
+| [notes/](notes/) | Teammates' notes as received (Word). Their content is in the docs ([references.md](docs/references.md#team-notes)) |
 
 CAD lives in Onshape (link TBD). STEP and PDF snapshots go in `cad/` once they exist.
 
@@ -72,6 +73,8 @@ python3 -m venv .venv
 .venv/bin/python calcs/r134a_properties.py
 .venv/bin/python calcs/displacement.py
 .venv/bin/python calcs/reliability.py
+.venv/bin/python calcs/pressure_cases.py
+.venv/bin/python calcs/vane_kinematics.py
 ```
 
 Each script prints Markdown tables that are pasted into the docs.

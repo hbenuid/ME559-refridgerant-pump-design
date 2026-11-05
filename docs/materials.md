@@ -20,10 +20,11 @@ checked against what real refrigerant pumps and compressors use.
 | Cam ring | Gray cast iron | Cheapest material passing every stack requirement, by 2–4× ([Stage 6](#ranking-fatigue-strength-vs-price-stage-6)). Graphite helps under boundary lubrication. Expands like the steel shaft (about 6–7 µstrain/°F), so clearances hold over −20 °F to 150 °F. Rotary refrigerant compressors use cast iron cylinders ([check](#check-against-refrigerant-pumps)). | Grade. If the vanes are steel, the ring track has to be much harder. |
 | Side plates | Gray cast iron | Same reasons as the ring. Loads are mostly compressive with low alternating stress, so cost and wear decide. | Grade. |
 | Rotor | Gray iron or steel (e.g. AISI 4140) | Both pass the stack screen and match its expansion. Gray iron is cheaper; steel has far more fatigue strength for about 10¹⁰ cycles. | The rotor stress estimate sets a fatigue line on the Stage 6 chart. |
-| Vanes | Not chosen: carbon-graphite, filled polymers (PEEK, PAI, PPS) or tool steel | All three are used in real vane pumps, and all pass the [vane screen](#vane-screen-in-granta). Running oil-free favours carbon or filled polymer over steel. PEEK wear grades come back by hand ([D26](decisions.md)). | Read the fatigue vs. density ranking; settle oil ([Q3](open-questions.md)); supplier data for carbon grades ([D23](decisions.md)). |
+| Vanes | Not chosen: carbon-graphite, filled polymers (PEEK, PAI, PPS) or tool steel | All three are used in real vane pumps, and all pass the [vane screen](#vane-screen-in-granta). Running oil-free favours carbon or filled polymer over steel. PEEK wear grades come back by hand ([D26](decisions.md)). The team's wear estimate argues for nitrided or PVD-coated steel on a hardened ring ([vane tip wear](functional-design.md#vane-tip-wear)), and the team expects to add a lubricant ([Q3](open-questions.md)). | Read the fatigue vs. density ranking; settle oil ([Q3](open-questions.md)); supplier data for carbon grades ([D23](decisions.md)). |
 | Housing | Low-temperature ductile iron EN GJS 350-22-LT | Same price as gray iron (about 74–86 USD/ft³) with about 1.7× the yield strength and twice the toughness. Impact-tested at −40 °C under EN 1563, and the usual refrigerant pump casing material. Granta fails it only on its temperature data, so it is added back by hand ([D25](decisions.md)). | Draw the wall-cost and leak-before-break rankings against gray iron, cast aluminium and cast steel ([housing screen](#housing-screen-in-granta)). |
 | Shaft | A standard steel: AISI 4140, 4340, 416 or 420 stainless, or 17-4PH | All pass the [shaft screen](#shaft-screen-in-granta) after [D29](decisions.md) and [D30](decisions.md). Steels have a true endurance limit, which a part loaded about 10¹⁰ times needs. | Fatigue check, then pick one. |
-| O-rings, bearings, motor | Set by the supplier | Purchased parts; only compatibility with R-134a (and POE) is checked. O-rings in HNBR or neoprene, not FKM ([candidates](#candidates-by-component)). | Confirm against compatibility charts. |
+| Containment can | Not chosen: 316 stainless or Hastelloy; carbon-fibre PEEK or ceramic | Holds the 300 psig design pressure ([D32](decisions.md)) inside the coupling's magnetic gap ([D33](decisions.md)). Metal is strong and simple but heats the liquid with eddy currents. Austenitic stainless is ruled out only in the stack. | [Q28](open-questions.md). |
+| O-rings, bearings, motor, magnetic coupling | Set by the supplier | Purchased parts; compatibility with R-134a (and POE) is checked for the parts in the liquid. The motor runs in air ([D33](decisions.md)). O-rings in HNBR or neoprene, not FKM ([candidates](#candidates-by-component)). | Confirm against compatibility charts. |
 
 **Ruled out:**
 
@@ -38,7 +39,8 @@ checked against what real refrigerant pumps and compressors use.
 ## What every material must satisfy
 
 - **Compatibility with R-134a**, and with POE oil if oil is present ([Q3](open-questions.md)). This covers swelling,
-  extraction and chemical attack. With the motor inside the housing, this applies to the motor insulation as well.
+  extraction and chemical attack. The motor is outside ([D33](decisions.md)), so this applies to the coupling's
+  encapsulated inner rotor and the containment can rather than to motor insulation.
 - **The −20 °F to 150 °F range**, including toughness at −20 °F and expansion over 170 °F.
 - **Wear in a fluid thinner than water**, under boundary lubrication. This affects vanes, ring, side plates and
   bearings most.
@@ -84,7 +86,7 @@ Parts that constrain each other are chosen together, and effort scales with how 
 | C. Housing | Bolted housing sections | Pressure boundary and the largest casting | Full method |
 | D. Shaft | Shaft, journals | Rotating fatigue | A standard steel plus a fatigue check |
 | E. Standard parts | Bolts, dowels, keys | Standard answers | One line each |
-| F. Purchased parts | O-rings, bearings, motor, terminal, valves | The supplier sets the material | Cite the source and check R-134a/POE compatibility |
+| F. Purchased parts | O-rings, bearings, motor, magnetic coupling, valves | The supplier sets the material | Cite the source and check R-134a/POE compatibility |
 
 ### Spec for each group
 
@@ -92,7 +94,7 @@ Parts that constrain each other are chosen together, and effort scales with how 
 |---|---|---|---|---|
 | A. Stack | Hold the running clearances; carry vane contact on the ring | −20 °F to 150 °F; expansion matched across the stack; grindable to a fine finish; dimensionally stable; endurance limit (rotor); hard ring track; R-134a/POE compatible | Minimum cost | Expansion vs. price per unit volume; hardness vs. price |
 | B. Vanes | Slide in the slot and seal at the tip | Wear in a thin fluid; fatigue at about 10¹⁰ cycles; stable at 150 °F | Low density: centrifugal tip force scales with it, and tip force drives wear | Fatigue strength vs. density |
-| C. Housing | Contain 150 psig plus the code factor ([Q9](open-questions.md)) | Toughness at −20 °F; castable; machinable | Minimum cost (mass doesn't matter in a basement) | Minimize C_m·ρ/σ_y (wall t = pR/σ); leak-before-break K_IC²/σ_y |
+| C. Housing | Contain the 300 psig design pressure ([D32](decisions.md)), plus any code factor ([Q7](open-questions.md)) | Toughness at −20 °F; castable; machinable | Minimum cost (mass doesn't matter in a basement) | Minimize C_m·ρ/σ_y (wall t = pR/σ); leak-before-break K_IC²/σ_y |
 | D. Shaft | Carry torque and bending | Endurance limit; hardenable journals | Minimum cost | Screen only |
 
 A sand-cast housing wall is often set by the minimum castable thickness rather than by pressure. In that case price
@@ -115,12 +117,12 @@ plates (about 10) sit outside the ferrous band; check what that does at the clam
 | Vanes | Carbon-graphite; filled PEEK (carbon/PTFE/graphite); tool steel | Rotary vane pumps for water and other thin fluids commonly pair carbon-graphite vanes and rotors with brass or stainless housings, which makes them a useful analog to research. Steel vanes are the norm in oil hydraulics but rely on an oil film. |
 | Side / port plates | Gray cast iron; bronze; carbon-graphite faced | These form the axial clearance, the largest leak path. |
 | Bearings | Carbon-graphite sleeve; silicon carbide sleeve; rolling-element (steel or hybrid ceramic) | Product-lubricated in liquid R-134a. Load depends on the vane layout trade ([functional-design.md](functional-design.md#vane-layout-trade-study)). |
-| Shaft | Alloy steel (e.g. 4140); martensitic or precipitation-hardening stainless | Carries the motor rotor; bearing journals may need hardening or a sleeve. |
+| Shaft | Alloy steel (e.g. 4140); martensitic or precipitation-hardening stainless | Carries the coupling's inner magnet rotor; bearing journals may need hardening or a sleeve. |
 | Housing (pump body) | Gray cast iron; cast aluminium | Aluminium is lighter but expands about twice as much as iron or steel (see below). |
-| Housing sections (semi-hermetic) | Gray cast iron; ductile iron; cast aluminium | Bolted sections with O-ring joints ([D13](decisions.md)). It is a pressure boundary: design pressure per [Q9](open-questions.md). Ductile iron gives more toughness at −20 °F. |
+| Housing sections | Gray cast iron; ductile iron; cast aluminium | Bolted sections with O-ring joints ([D13](decisions.md)). It is a pressure boundary, designed for 300 psig ([D32](decisions.md)). Ductile iron gives more toughness at −20 °F. |
 | Isolation valves | Purchased refrigeration service valves (brass or steel bodies) | Must be compatible with R-134a and rated for the design pressure. |
-| Electrical feed-through | Glass-to-metal sealed hermetic terminal | Usually a purchased part. |
-| Motor insulation | Magnet wire and slot insulation rated for refrigerant/oil service | Must be compatible with R-134a (and POE). Hermetic-motor grades exist; verify specific products. |
+| Containment can | 316 stainless; Hastelloy C; carbon-fibre PEEK; ceramic (zirconia) | Holds 300 psig in the magnetic gap. Metal cans heat the liquid with eddy currents; non-metallic cans don't ([Q28](open-questions.md)). |
+| Magnetic coupling | Purchased: neodymium or samarium-cobalt magnets, the inner rotor encapsulated (stainless sleeve or polymer) | Only the encapsulated inner rotor sits in R-134a ([D33](decisions.md)). The motor runs in air, so no hermetic terminal or refrigerant-rated insulation is needed. |
 | O-rings / static seals | HNBR, neoprene (CR) | Housing joints and cartridge seals; replaced at every service. FKM (Viton) is commonly listed as not recommended for R-134a. Check the compatibility chart for both R-134a and the oil. |
 
 ## Viable material families
@@ -184,7 +186,7 @@ expansion cap went from 7.5 to 7.6 µstrain/°F ([D29](decisions.md)); the table
 
 Notes:
 
-- **Stage 1** uses the brief's range with no margin for motor heat ([Q22](open-questions.md)). With "whole record" it
+- **Stage 1** uses the brief's range with no margin for heat inside the housing ([Q22](open-questions.md)). With "whole record" it
   passes 2,866 materials; Granta's default would pass 3,757. Ductile iron EN GJS 400-18-LT drops out here: its minimum
   service temperature is −193 to 14 °F, so it isn't sure to work at −20 °F.
 - **Price is per unit volume**, not per pound. The 3.1 in rotor fixes the stack's size, so material cost is volume ×
