@@ -24,6 +24,17 @@ One entry per decision. Never delete an entry; if a decision is reversed, add a 
 | D18 | 2026-10-22 | Tooling is amortized over 5 years of production (35,000 units) | Decided |
 | D19 | 2026-10-29 | Part numbers are assembly-coded | Decided; ranges to finalize with the part list |
 | D20 | 2026-10-29 | Fasteners appear in the BOM with torque specs, but get no drawing | Decided |
+| D21 | 2026-10-29 | Materials are chosen with Ashby's method in Granta EduPack 2026 R1, Level 3 database | Decided |
+| D22 | 2026-11-03 | Granta screens use only numeric requirements as Limit stages, passing on the whole record; no hand-picked families | Decided |
+| D23 | 2026-11-03 | The metal stack is screened with a fracture toughness minimum of 10 ksi·in^0.5; the all-carbon stack is judged from supplier data | Decided |
+| D24 | 2026-11-05 | The vane screen has no toughness or expansion limit and a price cap of 10,000 USD/ft³ | Decided |
+| D25 | 2026-11-05 | Low-temperature ductile iron (EN GJS 350-22-LT) is re-admitted to the housing screen as a documented exception | Decided |
+| D26 | 2026-11-05 | PEEK wear grades are re-admitted to the vane screen by hand | Decided |
+| D27 | 2026-11-05 | The housing screen keeps the stack's temperature, price and toughness limits, adds a casting limit, and has no expansion limit | Decided |
+| D28 | 2026-11-05 | The shaft gets a light Granta screen with the stack's limits and a fatigue strength vs. price chart | Decided |
+| D29 | 2026-11-05 | The stack and shaft expansion cap is 7.6 µstrain/°F, not 7.5 | Decided |
+| D30 | 2026-11-05 | The shaft's price cap is 2,000 USD/ft³ | Decided |
+| D31 | 2026-11-05 | Cast lead and magnesium alloys are removed from the housing shortlist by hand | Decided |
 
 ## D1: Liquid pump
 
@@ -151,3 +162,107 @@ Starting layout, to finalize once the part list exists:
 The handout exempts fasteners from drawings but says the BOM lists each part and asks for fastener torque specs. Each
 fastener is listed in the BOM by its standard designation (size, length, type, grade), with quantity and torque. It
 gets no drawing.
+
+## D21: Materials selection method
+
+Granta EduPack is available through the university, and its Limit, Tree and Chart stages carry out Ashby's
+screen-and-rank method directly. The Level 3 database is used because telling grades apart needs grade-level data
+such as fatigue strength, fracture toughness and expansion. Granta doesn't cover compatibility with R-134a and POE, or
+wear in a fluid this thin; those come from literature and supplier data. The method, the part groups and the running
+record of the screen are in [materials.md](materials.md#selection-method).
+
+## D22: Requirement-only screen, whole record
+
+Each requirement that can be written as a number is a Limit stage, and every stage passes a material only if its whole
+range meets the limit. This replaces the first screen (2026-10-29), which used Granta's default "any part of record"
+rule and a Tree stage of hand-picked families.
+
+- **Whole record**: Granta stores properties as ranges. The default passes a material that only might meet a limit;
+  for example, ductile iron GJS 400-18-LT passed −20 °F although its rating runs up to 14 °F.
+- **No hand-picked families**: a Tree stage is a judgment, not a requirement, so it's harder to defend. With numbers
+  only, an unsuitable survivor shows a missing requirement, which is then added as a stage.
+
+See [materials.md](materials.md#selection-in-granta).
+
+## D23: Toughness minimum, carbon judged separately
+
+On the fracture toughness vs. price chart, metals sit above about 10 ksi·in^0.5 and glasses, ceramics, concrete, foams
+and carbon below about 5, with almost nothing between. A minimum of 10 ksi·in^0.5 (whole record) removes every
+brittle material and keeps gray iron (14.6–18.2) and the steels.
+
+The same minimum removes carbon-graphite, which real vane pumps use at low loads. Level 3 holds only generic carbon
+records ("Resin impregnated carbon", "Carbon/resin", bulk graphites), so the all-carbon stack is judged from supplier
+data on specific grades rather than in this screen. See [materials.md](materials.md#what-survives-stage-4).
+
+## D24: Vane screen thresholds
+
+The stack's limits would remove two of the three vane candidates, so the vane screen sets its own:
+
+- **No toughness limit.** The stack's 10 ksi·in^0.5 removes carbon-graphite and filled PEEK. Vanes are ranked
+  instead, and brittleness is judged by hand: short vane extension keeps bending low. Carbon is still judged from
+  supplier data ([D23](#d23-toughness-minimum-carbon-judged-separately)).
+- **No expansion limit.** Each 1 µstrain/°F of mismatch with the stack changes a 1 in vane by about 0.0002 in over
+  170 °F. Carbon (about 2–3), steel (about 6.5) and filled PEEK (above 10) all stay in, and each one's axial
+  clearance is sized by hand once the leakage model sets the budget ([Q2](open-questions.md)).
+- **Price at most 10,000 USD/ft³.** Eight vanes 0.10 in thick come to under 1 in³ even at 1 × 1 in each, so
+  material costs under about $5 per pump at this cap. The stack's 1,500 would likely remove filled PEEK.
+
+Temperature stays at −20 °F to 150 °F on the whole record ([D22](#d22-requirement-only-screen-whole-record)), and the
+ranking is fatigue strength against density ([materials.md](materials.md#spec-for-each-group)).
+
+## D25: Low-temperature ductile iron in the housing
+
+Every ordinary ductile iron fails Granta's −20 °F rating on the whole-record rule, yet low-temperature ductile iron is
+the usual casing material in refrigerant pumps ([materials.md](materials.md#check-against-refrigerant-pumps)).
+EN 1563 impact-tests GJS 350-22-LT at −40 °C (−40 °F), below our −20 °F. The housing screen runs whole-record as
+before, and GJS 350-22-LT is then added by hand on its ranking chart, citing EN 1563. The rating is to be confirmed
+against the standard. This answers [Q23](open-questions.md#answered).
+
+## D26: PEEK wear grades in the vane screen
+
+Granta has no service-temperature data for the PEEK wear grades, so the whole-record temperature stage removes them
+([materials.md](materials.md#vane-screen-in-granta)). They are the filled PEEK grades made for sliding wear, and the
+25–35% carbon grade expands like the stack (5.5 µstrain/°F). As with ductile iron in the housing
+([D25](#d25-low-temperature-ductile-iron-in-the-housing)), the screen stays whole-record and the wear grades are added
+by hand on the vane chart, with the temperature rating taken from the supplier datasheet. This answers
+[Q24](open-questions.md#answered).
+
+## D27: Housing screen thresholds
+
+- **Kept from the stack**: −20 °F to 150 °F, price at most 1,500 USD/ft³, fracture toughness at least 10 ksi·in^0.5,
+  all on the whole record.
+- **No expansion limit.** Cast aluminium (about 12 µstrain/°F) stays in the ranking. Around an iron cartridge it would
+  loosen a 3.1 in bore fit by about 0.003 in over 170 °F, so if aluminium wins on cost the fit is designed for that
+  by hand.
+- **Castable**: a Limit on Granta's casting rating, so the requirement is a stage and not a hand pick.
+
+Ranking follows the spec ([materials.md](materials.md#spec-for-each-group)): yield strength against price per unit
+volume for wall cost, and fracture toughness against yield strength for leak-before-break.
+
+## D28: Shaft screen
+
+The shaft is a standard steel plus a fatigue check, so it gets a light screen: the stack's Stages 1, 2 and 4
+(temperature, price with the expansion cap, toughness) and a fatigue strength vs. price chart. No new thresholds.
+
+## D29: Expansion cap 7.6 µstrain/°F
+
+The 7.5 cap was set from steel's typical 6.5 µstrain/°F, but AISI 4140, the usual shaft steel, is listed at
+6.39–7.5. Its top value landed on the cap, so the whole-record rule removed it from both the stack and the shaft.
+At 7.6 it passes. The stack gains 23 records (2,866 → 458 → 316 → 305), all steels, and loses none
+([materials.md](materials.md#stages)). The vane and housing screens have no expansion cap, so they don't change.
+This answers [Q25](open-questions.md#answered).
+
+## D30: Shaft price cap 2,000 USD/ft³
+
+17-4PH (1,460–1,660 USD/ft³) and 15-5PH ran just over the stack's 1,500. A shaft is a small volume, so a higher
+price per volume adds only a few dollars per pump. At 2,000 both pass. The stack keeps 1,500. The shaft screen now
+passes 370 ([materials.md](materials.md#shaft-screen-in-granta)). This answers [Q26](open-questions.md#answered).
+
+## D31: Lead and magnesium out of the housing by hand
+
+The housing screen passes 6 cast lead and 27 cast magnesium alloys. Neither belongs in a refrigerant pressure
+housing, but what rules them out isn't held in Granta: lead is weak (about 5 ksi yield) and toxic, and magnesium
+corrodes and is generally kept out of contact with halogenated refrigerants (to confirm against the code once
+[Q7](open-questions.md) is settled). They are struck from the shortlist by hand, leaving 96. This is an exception to
+[D22](#d22-requirement-only-screen-whole-record): the requirement that removes them is compatibility, which Granta
+can't filter. See [materials.md](materials.md#housing-screen-in-granta).

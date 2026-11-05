@@ -60,6 +60,7 @@ All due on the day of the final presentation (date not given yet). Full requirem
 | [docs/serviceability.md](docs/serviceability.md) | Field repair, remanufacture and recycling: service routes, design features, repair-vs-swap decision |
 | [docs/references.md](docs/references.md) | Sources |
 | [calcs/](calcs/) | Python calculations. Every number in the docs should trace back to a script here |
+| [data/granta/](data/granta/) | Granta EduPack Pass/Fail tables, one per selection project ([materials.md](docs/materials.md#selection-in-granta)) |
 
 CAD lives in Onshape (link TBD). STEP and PDF snapshots go in `cad/` once they exist.
 

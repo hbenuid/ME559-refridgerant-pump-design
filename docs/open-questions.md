@@ -18,6 +18,7 @@ Questions we can't answer yet, with the working assumption we use in the meantim
 | Q15 | How is the pump mounted: horizontal shaft on a base, or vertical shaft? | It sets thrust bearing load, vane seating at startup, footprint and service access. | Not decided. | Open |
 | Q19 | When is the final presentation? | Everything is due that day: paper drawings, the digital folder and the presentation. | — | Ask instructor |
 | Q21 | Which consumables (assembly oil, thread locker, grease) can be used inside the housing? | They sit in R-134a for the life of the pump, and they go in the BOM. Assembly oil also bears on [Q3](open-questions.md). | Check each against R-134a and POE; prefer mechanical locking to thread locker inside the housing ([materials.md](materials.md#consumables)). | Research |
+| Q22 | Does motor heat raise any part, or the liquid entering the pump, above 150 °F? | The motor shares the housing and is cooled by the liquid. If the liquid passes the motor before the pump, or parts near the motor run hot, the Granta screen needs a higher maximum service temperature ([materials.md](materials.md#selection-in-granta), Stage 1), and expansion changes clearances further. Polymer vanes and elastomer seals are the most sensitive. | Every part is at fluid temperature, so 150 °F is the upper limit. | Open |
 
 ## Answered
 
@@ -32,3 +33,7 @@ Questions we can't answer yet, with the working assumption we use in the meantim
 | Q17 | The deliverables handout is headed ME500 and says to upload to the ME691 shared folder. Which folder is ours? | The ME559 shared folder. The handout was reused from another course. | 2026-10-29 | — |
 | Q18 | What part-numbering scheme do we use? | Assembly-coded, with ranges by assembly group. | 2026-10-29 | [D19](decisions.md) |
 | Q20 | Do fasteners go in the BOM? | Yes, by standard designation with quantity and torque, and no drawing. | 2026-10-29 | [D20](decisions.md) |
+| Q23 | Which ductile iron grade is rated to −20 °F, so ductile iron can be used despite Granta's temperature data? | EN GJS 350-22-LT, which EN 1563 impact-tests at −40 °C (confirm against the standard). It comes back into the housing screen as a documented exception, added by hand on the ranking chart; the screen itself stays whole-record. | 2026-11-05 | [D25](decisions.md) |
+| Q24 | Should the PEEK wear grades come back into the vane screen by hand? | Yes. Granta has no service-temperature data for them; they are added by hand on the vane chart, with the rating from the supplier datasheet. | 2026-11-05 | [D26](decisions.md) |
+| Q25 | Should the 7.5 µstrain/°F expansion cap move up slightly, so AISI 4140 passes? | Yes, to 7.6, for the stack and the shaft. 4140 passes, along with 22 other steels in the stack. | 2026-11-05 | [D29](decisions.md) |
+| Q26 | Should the shaft get a higher price cap than 1,500 USD/ft³? | Yes, 2,000. 17-4PH and 15-5PH pass. | 2026-11-05 | [D30](decisions.md) |
