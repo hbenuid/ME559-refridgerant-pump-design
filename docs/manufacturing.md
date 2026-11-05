@@ -18,18 +18,21 @@ volume:
 
 | Component | Candidate processes | Notes |
 |---|---|---|
-| Cam ring (single-lobe) | Bore, then hone or grind, from casting, tube or PM blank | A round bore is cheap to hold tight. |
+| Cam ring (single-lobe) | Bore, then hone or grind, from casting, tube or PM blank | A round bore is cheap to hold tight. The team proposes a honed finish of 8–16 µin Ra ([vane tip wear](functional-design.md#vane-tip-wear)). |
 | Cam ring (balanced) | PM blank, then profile grinding, jig grinding, or wire EDM and finish | The non-circular profile is the main cost of the balanced layout. |
 | Rotor | PM steel with formed slots, then size and grind faces; or bar stock with slots ground | Slot width and squareness to the faces are critical. PM shifts cost into tooling. |
 | Vanes | Carbon-graphite: mould then grind. PEEK: injection-mould then grind. Steel: precision-ground strip, cut to length | Vane thickness against the slot sets leakage and friction. |
 | Side / port plates | Cast or PM blank, face-ground or lapped flat | Flatness and parallelism set the axial clearance, the main leak path. |
 | Pump body | Sand-cast gray iron and CNC; or die-cast aluminium and CNC | The material choice drives the process ([materials.md](materials.md)). |
 | Shaft | Turn, harden, grind journals | Standard. |
-| Housing sections (semi-hermetic) | Sand-cast iron, then CNC: O-ring grooves, sealing faces, bolt holes, bearing and cartridge bores | Replaces a welded shell ([D13](decisions.md)). Sealing-face flatness and finish set static leak tightness. |
+| Housing sections | Sand-cast iron, then CNC: O-ring grooves, sealing faces, bolt holes, bearing and cartridge bores, can seat, motor adapter pilot | Replaces a welded shell ([D13](decisions.md)). Sealing-face flatness and finish set static leak tightness. |
 | Pumping cartridge | Ring, rotor, vanes and side plates assembled and doweled, clearances set and checked at the factory | Sold as the field repair kit ([serviceability.md](serviceability.md)). |
-| Motor | Purchased stator and rotor stack, or buy a complete motor | Make vs. buy. The stator must be removable for remanufacture. |
+| Motor | Purchased standard 2-pole flange-mounted motor | It runs in air ([D33](decisions.md)), so a catalog motor works. It bolts to an adapter that centres the outer magnet rotor around the can. |
+| Magnetic coupling | Purchased inner and outer magnet rotors | The inner rotor is encapsulated against refrigerant and oil. |
+| Containment can | Metal: deep-drawn or machined. Non-metallic: molded or machined | Material open ([Q28](open-questions.md)). Part of the pressure boundary, so it is leak-tested with the housing. |
+| Relief valves | Purchased | Type and set points open ([Q27](open-questions.md)). |
 | Isolation valves | Purchased | — |
-| Bearings, O-rings, terminal | Purchased | — |
+| Bearings, O-rings | Purchased | — |
 
 ## Critical-to-function features
 
@@ -38,8 +41,11 @@ These are the features where tolerance drives performance, and so drives process
 - **Axial (side) clearance** between rotor/vanes and side plates: the largest leak path in a thin liquid.
 - **Vane-to-slot clearance**: leakage and vane tilt.
 - **Ring bore form and finish**: vane tip sealing and wear.
-- **Bearing bore alignment** across the pump and motor: they share a shaft, and the bores sit in separate bolted
-  sections, so the joints need doweled location.
+- **Bearing bore alignment** along the pump shaft: the bores sit in separate bolted sections, so the joints need
+  doweled location.
+- **Coupling concentricity**: the inner rotor, can and outer rotor share a small magnetic gap, so the motor adapter
+  has to centre the motor on the pump shaft axis ([D33](decisions.md)).
+- **Ring bore finish**: honed to 8–16 µin Ra (team proposal, [functional-design.md](functional-design.md#vane-tip-wear)).
 - **O-ring sealing faces**: flatness and finish at each housing joint.
 
 ## Drawing requirements
@@ -64,7 +70,8 @@ shows the parting line, draft angle, and gate and ejector locations, where they 
 |---|---|
 | Axial clearance | Flatness and parallelism of the side-plate faces; ring width against rotor and vane length |
 | Vane slots | Slot width; parallelism of the slot walls and perpendicularity to the rotor faces |
-| Ring bore | Size, cylindricity (profile for a balanced cam ring), surface finish |
+| Ring bore | Size, cylindricity (profile for a balanced cam ring), surface finish (8–16 µin Ra, honed) |
+| Motor adapter pilot | Concentricity or position to the pump shaft axis, so the outer rotor clears the can |
 | Bearing bores across bolted sections | Position or runout of each bore to a common datum axis set by the doweled joints |
 | O-ring sealing faces and grooves | Flatness, surface finish, groove dimensions per the O-ring maker's guide |
 
@@ -87,6 +94,7 @@ and reuse criteria for each part.
 ## To research
 
 - Typical achievable tolerances and costs for PM rotors and rings at this size.
-- How semi-hermetic compressor manufacturers build and remanufacture their housings and motors.
+- How semi-hermetic compressor manufacturers build and remanufacture their housings.
+- How magnetic-drive pump makers build containment cans and size couplings.
 - Fixturing and in-process gauging for side clearance.
 - Whether the handout's mold callouts (draft, gates, ejectors) are expected on PM parts.

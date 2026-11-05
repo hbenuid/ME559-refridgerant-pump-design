@@ -7,7 +7,7 @@ One entry per decision. Never delete an entry; if a decision is reversed, add a 
 | D1 | 2026-10-22 | The pump moves liquid R-134a; it is not a compressor | Decided |
 | D2 | 2026-10-22 | The −20 °F to 150 °F range is the refrigerant temperature | Superseded by D9 |
 | D3 | 2026-10-22 | Flow rate is ours to choose | Decided; method in D10 |
-| D4 | 2026-10-22 | Hermetic construction, motor inside the shell | Decided; shell closure refined by D13 |
+| D4 | 2026-10-22 | Hermetic construction, motor inside the shell | Shell closure refined by D13; motor moved outside by D33 |
 | D5 | 2026-10-22 | Rotor diameter fixed at 3.1 in | Constraint |
 | D6 | 2026-10-22 | Tooling: Python + CoolProp for calcs, Onshape for CAD, Markdown in this repo for documentation | Decided |
 | D7 | — | Vane layout: single-lobe eccentric vs. balanced double-lobe | **Open**: trade study in [functional-design.md](functional-design.md#vane-layout-trade-study) |
@@ -16,7 +16,7 @@ One entry per decision. Never delete an entry; if a decision is reversed, add a 
 | D10 | 2026-10-22 | Size the smallest practical pump; flow follows from the geometry | Decided; values open ([Q2](open-questions.md)) |
 | D11 | 2026-10-22 | MTBF is read literally, as a constant failure rate | Superseded by D12 |
 | D12 | 2026-10-22 | MTBF is handled per industry practice: component failure-rate prediction, plus wear-out and fatigue parts sized to outlast 50,000 h | Decided |
-| D13 | 2026-10-22 | Semi-hermetic: bolted housing with O-ring joints instead of a welded shell | Decided |
+| D13 | 2026-10-22 | Semi-hermetic: bolted housing with O-ring joints instead of a welded shell | Bolted housing decided; motor moved outside by D33 |
 | D14 | 2026-10-22 | Field-maintainable where life-cycle cost justifies it, otherwise factory-refurbishable; recyclable at end of life. A refrigeration technician does field repair. | Decided; cost data open ([Q13](open-questions.md)) |
 | D15 | 2026-10-22 | Inlet and outlet isolation valves built into the pump | Decided |
 | D16 | — | Bearing type: product-lubricated sleeve vs. rolling-element | **Open**: trade study in [functional-design.md](functional-design.md#bearing-trade-study) |
@@ -35,6 +35,8 @@ One entry per decision. Never delete an entry; if a decision is reversed, add a 
 | D29 | 2026-11-05 | The stack and shaft expansion cap is 7.6 µstrain/°F, not 7.5 | Decided |
 | D30 | 2026-11-05 | The shaft's price cap is 2,000 USD/ft³ | Decided |
 | D31 | 2026-11-05 | Cast lead and magnesium alloys are removed from the housing shortlist by hand | Decided |
+| D32 | 2026-11-05 | The design pressure is 300 psig, set by a pump standing idle at 150 °F | Decided |
+| D33 | 2026-11-05 | Magnetic drive: a standard motor outside the housing drives the pump through a magnetic coupling | Decided; containment can open ([Q28](open-questions.md)) |
 
 ## D1: Liquid pump
 
@@ -59,6 +61,9 @@ field. Liquid R-134a is a dielectric, so the motor can run flooded in it and be 
 Update: D13 makes the shell bolted (semi-hermetic), so the unit can be opened for repair. The motor still runs in
 the refrigerant and there is still no shaft seal.
 
+Update (2026-11-05): D33 moves the motor out of the refrigerant. It drives the pump through a magnetic coupling, so
+the pump stays sealless.
+
 ## D5: Rotor diameter 3.1 in
 
 Added to the brief on 2026-10-22. With the diameter fixed, the free sizing variables are eccentricity (or cam stroke),
@@ -77,6 +82,10 @@ at 55 psig would be vapor above 58 °F. This removes cavitation and NPSH analysi
 pressure. Design properties are saturated-liquid values at each temperature. The bounding cases are 150 °F (lowest
 viscosity, most leakage) and −20 °F (highest viscosity and density, most drag). See
 [requirements.md](requirements.md#liquid-at-all-times).
+
+Update (2026-11-05): D9 still sets the performance cases. A pump standing idle at 150 °F sets the design pressure
+instead ([D32](#d32-design-pressure-300-psig-from-the-idle-case)), and real-fluid cavitation and vapor lock are
+logged as risks outside the course basis ([requirements.md](requirements.md#real-fluid-check)).
 
 ## D10: Smallest practical pump
 
@@ -115,6 +124,9 @@ liquid) and can be opened both in the field and at the factory. Semi-hermetic co
 way and are routinely field-repaired and remanufactured. Costs: heavier cast and machined housing sections, static
 O-ring leak paths, and bolted joints that must hold preload under pressure cycles.
 
+Update (2026-11-05): with the magnetic drive ([D33](#d33-magnetic-drive)) the bolted housing and O-ring joints stay,
+but the motor is no longer inside the housing.
+
 ## D14: Serviceability goal
 
 The pump should be field-maintainable where that is worth it. Otherwise it should be designed for refurbishment by
@@ -137,6 +149,10 @@ points.
 The 50,000 h MTBF budget (Σλᵢ ≤ 2.0 × 10⁻⁵ per hour) covers the pump mechanism: the cartridge (ring, rotor, vanes,
 side plates), the shaft and the bearings. The motor, terminal and isolation valves are purchased parts, judged
 separately against their suppliers' ratings. The housing O-ring joints are also outside the budget.
+
+Update (2026-11-05): with the magnetic drive ([D33](#d33-magnetic-drive)) there is no terminal, and the magnetic
+coupling joins the purchased parts judged on their suppliers' ratings. The containment can is a pressure part, outside
+the budget like the O-ring joints.
 
 ## D18: 5-year production horizon
 
@@ -266,3 +282,45 @@ corrodes and is generally kept out of contact with halogenated refrigerants (to 
 [Q7](open-questions.md) is settled). They are struck from the shortlist by hand, leaving 96. This is an exception to
 [D22](#d22-requirement-only-screen-whole-record): the requirement that removes them is compatibility, which Granta
 can't filter. See [materials.md](materials.md#housing-screen-in-granta).
+
+## D32: Design pressure 300 psig, from the idle case
+
+The teammates' temperature analysis ([references.md](references.md#team-notes)) points out that the housing sees its
+highest pressure when the pump is idle, not while it runs. While it runs, the liquid is cold and the highest pressure
+is the 150 psig outlet. A pump standing full of R-134a in a 150 °F space warms with it: some liquid boils, and the
+pressure rises to the saturation pressure at 150 °F, 263 psig ([calcs/pressure_cases.py](../calcs/pressure_cases.py)).
+Rounded up to 300 psig for hot spots, pressure spikes and the relief setting, this is the design pressure for the
+housing, the containment can, the bolts and the O-ring joints.
+
+D9 still sets the performance cases: 150 °F liquid properties for leakage and −20 °F for drag. The design takes the
+worst case of each. Proof and burst test factors still depend on the codes ([Q7](open-questions.md)). This answers
+[Q9](open-questions.md#answered).
+
+The 263 psig assumes some vapor space in the pump or the connected piping. A pump that is completely full of liquid,
+with both isolation valves closed, goes far higher as it warms; that case belongs to the relief question
+([Q27](open-questions.md)).
+
+## D33: Magnetic drive
+
+The motor moves outside the housing. An outer magnet rotor on the motor shaft turns an inner magnet rotor on the pump
+shaft, across a containment can that closes the pressure boundary. The team notes propose it as suitable for
+low-viscosity liquids ([references.md](references.md#team-notes)). The pump stays sealless, as in
+[D4](#d4-hermetic): no shaft seal and no dynamic leak path.
+
+What changes:
+
+- **Motor**: a standard catalog motor running in air. It no longer needs refrigerant-rated insulation, and no
+  electrical terminal passes through the pressure boundary.
+- **Service**: a technician can change the motor without opening the refrigerant circuit
+  ([D14](#d14-serviceability-goal)).
+- **New parts**: the coupling's two magnet rotors and the containment can. The can holds the 300 psig design pressure
+  ([D32](#d32-design-pressure-300-psig-from-the-idle-case)); its material is [Q28](open-questions.md).
+- **Overload**: the coupling slips if the torque passes its rating, for example against a blocked outlet. It doesn't
+  re-engage until the motor stops, and slipping heats the magnets. It limits torque but doesn't relieve pressure
+  ([Q27](open-questions.md)).
+- **Heat**: a metal can turns part of the shaft power into eddy-current heat in the liquid
+  ([Q22](open-questions.md)).
+
+This supersedes the motor location in D4 and D13. The bolted housing with O-ring joints (D13), the isolation valves
+([D15](#d15-integral-isolation-valves)) and the replaceable cartridge stay. See
+[functional-design.md](functional-design.md#magnetic-drive).
