@@ -10,7 +10,7 @@ from math import exp, log
 
 MTBF_H = 50_000
 SPEED_RPM = 3600
-VANES = 8
+VANE_COUNTS = (6, 8)  # placeholders; the vane count is open
 HOURS_PER_YEAR = 8760
 
 
@@ -28,8 +28,8 @@ def cycle_table():
         ("Shaft, rotating bending under a fixed-direction load", "1", revs),
         ("Vane load and stroke, single-lobe", "1", revs),
         ("Vane load and stroke, balanced double-lobe", "2", 2 * revs),
-        (f"Pressure pulses on ring and housing (z = {VANES})", "z", VANES * revs),
     ]
+    rows += [(f"Vane passes and pressure pulses on ring and housing (z = {z})", "z", z * revs) for z in VANE_COUNTS]
     print(f"| Load | Cycles per rev | Cycles in {MTBF_H:,} h at {SPEED_RPM} RPM |")
     print("|---|---|---|")
     for name, per_rev, n in rows:
