@@ -124,7 +124,8 @@ screen.
 | Database | Level 3, for grade-level data (fatigue strength, fracture toughness, expansion) |
 | Select from | MaterialUniverse: All materials (4,392 records) |
 | Units | US: °F, µstrain/°F, USD/ft³ |
-| Project file | `pump-stack.ces`, in Documents on the Citrix machine (not in this repo) |
+| Project files | `pump-stack.ces`, `pump-vanes.ces`, `pump-housing.ces` and `pump-shaft.ces` in `X:\ME559`, on the personal X: network drive (not in this repo). The Citrix desktop doesn't keep Documents between sessions: the first save there was gone on 2026-11-05. |
+| Exported results | [data/granta/](../data/granta/), one tab-separated file per project, copied from Granta's Pass/Fail table on 2026-11-05 with the current settings. Each row is one of the 4,392 records: its name, how many stages it passed, and Pass or Fail for each stage. A chart stage fails a record only when it lacks data for an axis. |
 
 ### Approach
 
@@ -143,26 +144,32 @@ requirement that hasn't been entered yet, which then becomes the next stage. Req
 
 ### Stages
 
-Project `pump-stack`, built 2026-11-03.
+Project `pump-stack`, built 2026-11-03 and rebuilt on 2026-11-05 with the same pass counts. Later on 2026-11-05 the
+expansion cap went from 7.5 to 7.6 µstrain/°F ([D29](decisions.md)); the table shows the current settings.
 
 | Stage | Type | Settings | Pass when | Pass |
 |---|---|---|---|---|
 | 1 | Limit | Thermal properties. Maximum service temperature: minimum 150 °F. Minimum service temperature: maximum −20 °F. Logic AND. | Whole record | 2,866 of 4,392 |
-| 2 | Limit | Price per unit volume: maximum 1,500 USD/ft³. Thermal expansion coefficient: maximum 7.5 µstrain/°F. Logic AND. | Whole record | 434 of 4,392 |
-| 3 | Chart | Y: Fracture toughness (ksi·in^0.5), logarithmic, autoscale. X: Price per unit volume (USD/ft³), logarithmic, autoscale. No selection box. | — | 434 of 4,392 |
-| 4 | Limit | Impact & fracture properties. Fracture toughness: minimum 10 ksi·in^0.5. | Whole record | 293 of 4,392 |
-| 5 | Limit | Mechanical properties. Hardness - Vickers: minimum 100 HV. | Whole record | 282 of 4,392 |
-| 6 | Chart | Y: Fatigue strength at 10⁷ cycles (ksi), logarithmic, autoscale. X: Price per unit volume (USD/ft³), logarithmic, autoscale. No selection line yet. | — | 282 of 4,392 |
+| 2 | Limit | Price per unit volume: maximum 1,500 USD/ft³. Thermal expansion coefficient: maximum 7.6 µstrain/°F. Logic AND. | Whole record | 458 of 4,392 (434 at 7.5) |
+| 3 | Chart | Y: Fracture toughness (ksi·in^0.5), logarithmic, autoscale. X: Price per unit volume (USD/ft³), logarithmic, autoscale. No selection box. | — | 458 of 4,392 |
+| 4 | Limit | Impact & fracture properties. Fracture toughness: minimum 10 ksi·in^0.5. | Whole record | 316 of 4,392 (293 at 7.5) |
+| 5 | Limit | Mechanical properties. Hardness - Vickers: minimum 100 HV. | Whole record | 305 of 4,392 (282 at 7.5) |
+| 6 | Chart | Y: Fatigue strength at 10⁷ cycles (ksi), logarithmic, autoscale. X: Price per unit volume (USD/ft³), logarithmic, autoscale. No selection line yet. | — | 305 of 4,392 |
 
 Notes:
 
-- **Stage 1** uses the brief's range with no margin for motor heat ([Q17](open-questions.md)). With "whole record" it
+- **Stage 1** uses the brief's range with no margin for motor heat ([Q22](open-questions.md)). With "whole record" it
   passes 2,866 materials; Granta's default would pass 3,757. Ductile iron EN GJS 400-18-LT drops out here: its minimum
   service temperature is −193 to 14 °F, so it isn't sure to work at −20 °F.
 - **Price is per unit volume**, not per pound. The 3.1 in rotor fixes the stack's size, so material cost is volume ×
   price per volume.
 - **The expansion cap** is set by the steel shaft, about 6.5 µstrain/°F, running through the rotor
-  ([thresholds](#stack-thresholds)).
+  ([thresholds](#stack-thresholds)). At 7.5 it removed AISI 4140, whose listed range is 6.39–7.5, so it was raised to
+  7.6 ([D29](decisions.md)).
+- **What 7.6 adds**: 23 records pass all stages that failed at 7.5, all steels. AISI 4140 (annealed, normalized,
+  tempered at 425, 540 and 650 °C), 41L40, 5140, 5150, 81B45, the free-machining carbon steels 1137 and 1141, and the
+  duplex stainless LDX2101. Nothing that passed at 7.5 drops out. The family breakdowns below were taken at 7.5; the
+  23 steels are the only difference.
 
 ### What survives Stages 1 and 2
 
@@ -286,9 +293,13 @@ roughly ±20%:
 | Martensitic stainless AISI 414, intermediate temper | About 500 | About 60 |
 | Tool steel AISI S5, tempered at 205 °C | About 850 | About 90 |
 | Ni-Resist EN GJSA XNi35 | About 1,200 | About 27 |
+| Patented steel wire (black point, clicked) | 227–348 | 377–392 |
 
 What the ranking shows:
 
+- **The highest point is a wire product.** Patented steel wire passes every stage and sits far above the cluster,
+  and AISI 431 wire also passes. Nothing in the screen tests product form, and a ring, rotor or plate can't be made
+  from wire, so these records are ignored here.
 - **Gray iron is the cheapest material by a factor of 2–4** and has the lowest fatigue strength. Its datasheet value
   for GJL 250 is 10.4–19.6 ksi at 75–87 USD/ft³ ([below](#datasheet-values)).
 - **Steels buy fatigue strength roughly in proportion to price.** Fatigue strength per dollar (a line of slope 1 on
@@ -319,7 +330,8 @@ So the stack result matches practice: gray iron ring and side plates, iron or st
 
 - **Ductile iron** is a standard refrigerant pump material at low temperature, yet every ordinary grade fails Granta's
   −20 °F rating on the whole-record rule. Low-temperature grades (e.g. EN GJS 350-22-LT) are what industry uses, so
-  ductile iron should come back for the rotor and housing on that evidence ([Q18](open-questions.md)).
+  ductile iron should come back for the rotor and housing on that evidence. For the housing it does, as a documented
+  exception ([D25](decisions.md)).
 - **Sintered (PM) iron and steel**, used for vanes and liners, have no material record in Level 3.
 
 Most of the 282 are not standard for these parts: sheet and structural steels, ferritic stainless, Ni-Resist, and tool
@@ -332,7 +344,7 @@ All pass/fail filters go in before any datasheet lookups; datasheets are only fo
 | Filter | Value | Why | Status |
 |---|---|---|---|
 | Service temperature | −20 °F to 150 °F | The brief | Applied (Stage 1) |
-| Thermal expansion coefficient | ≤ 7.5 µstrain/°F | The steel shaft (about 6.5) runs through the rotor, so the stack can't expand much more than steel. Removes aluminium (about 12) and austenitic stainless (about 9–10). | Applied (Stage 2) |
+| Thermal expansion coefficient | ≤ 7.6 µstrain/°F (7.5 until [D29](decisions.md)) | The steel shaft (about 6.5) runs through the rotor, so the stack can't expand much more than steel. Removes aluminium (about 12) and austenitic stainless (about 9–10). 7.6 rather than 7.5 so AISI 4140 (6.39–7.5) passes. | Applied (Stage 2) |
 | Price per unit volume | ≤ 1,500 USD/ft³ | About 18× cast iron, generous at 7,000/yr | Applied (Stage 2) |
 | Fracture toughness | ≥ 10 ksi·in^0.5 | The chart shows a gap between about 5 and 10 ksi·in^0.5. A minimum there removes glasses, ceramics, concrete and foams, and also carbon-graphite. | Applied (Stage 4) |
 | Fatigue strength at 10⁷ cycles | — | Needs the vane and rotor stress estimate first | Deferred |
@@ -356,8 +368,8 @@ records whose expansion ranges presumably dip under 7.5 µstrain/°F. Its findin
   composites but no PM steel. Powder metallurgy is listed as a process (ProcessUniverse), not a material. PM ferrous
   parts should expand like wrought steel; confirm with supplier data.
 - **Price removed titanium but not the ceramics:** silicon carbide and some aluminas cost under 1,500 USD/ft³.
-- **Housing toughness, to check later**: EN 1563 impact-tests GJS 400-18-LT at −20 °C (−4 °F) and GJS 350-22-LT at
-  −40 °C, so only the 350 grade is tested below our −20 °F (−29 °C) (verify against the standard).
+- **Housing toughness**: EN 1563 impact-tests GJS 400-18-LT at −20 °C (−4 °F) and GJS 350-22-LT at −40 °C, so only
+  the 350 grade is tested below our −20 °F (−29 °C) (verify against the standard). Settled in [D25](decisions.md).
 
 ### Datasheet values
 
@@ -374,8 +386,138 @@ From the Granta datasheets. A `*` in Granta marks an estimated value.
   covers a wider temperature span, so compare materials on the headline values and use the temperature curve for
   the clearance calculation.
 - GJS 400-18-LT fails Stage 1 under "whole record", and no other ordinary ductile iron grade in Level 3 passes
-  Stages 1 and 2 either, GJS 350-22-LT included (not checked which stage removes it). EN 1563 impact-tests GJS 350-22-LT at −40 °C, so if ductile iron is wanted (for example for
-  the housing), Granta's temperature rating would need checking against the standard.
+  Stages 1 and 2 either. GJS 350-22-LT fails Stage 1 too: Granta gives it the same minimum service temperature,
+  −238 to 14 °F ([housing screen](#housing-screen-in-granta)). EN 1563 impact-tests it at −40 °C, so it comes back
+  into the housing screen by hand ([D25](decisions.md)).
+
+## Vane screen in Granta
+
+Project `X:\ME559\pump-vanes.ces`, built 2026-11-05: Level 3, MaterialUniverse: All materials (4,392 records), every
+Limit passing on the whole record. The thresholds are in [D24](decisions.md): no toughness or expansion limit, and a
+price cap of 10,000 USD/ft³ instead of the stack's 1,500.
+
+| Stage | Type | Settings | Pass when | Pass |
+|---|---|---|---|---|
+| 1 | Limit | Thermal properties. Maximum service temperature: minimum 150 °F. Minimum service temperature: maximum −20 °F. Logic AND. | Whole record | 2,866 of 4,392 |
+| 2 | Limit | Price per unit volume: maximum 10,000 USD/ft³. | Whole record | 2,446 of 4,392 |
+| 3 | Chart | Y: Fatigue strength at 10⁷ cycles (ksi), logarithmic, autoscale. X: Density (lb/in³), logarithmic, autoscale. No selection line yet. | — | 2,258 of 4,392 |
+
+A chart stage drops records that lack data for either axis. Stage 3 drops 188 this way: honeycombs (aluminium, aramid,
+glass/phenolic, glass/polyimide, polycarbonate), foams, cork and natural fibres. No vane candidate is among them.
+
+**Candidates still in after Stage 3:**
+
+- **Carbon and graphite**: "Resin impregnated carbon", "Metal impregnated carbon", "Carbon/resin", and the bulk carbons
+  and graphites. Still generic records; specific grades come from supplier data ([D23](decisions.md)).
+- **Polymers**: PEEK unfilled, 30% carbon fibre and 30% glass fibre; PAI unfilled and filled, including "PAI (graphite
+  and PTFE)"; PPS grades, several with carbon fibre and PTFE; PTFE.
+- **Tool steels**: all 82 records.
+
+**PEEK wear grades fail Stage 1 for missing data.** Stage 1 removes "PEEK-modified (25-35% carbon filled, wear
+grade)", "PEEK-modified (45-55% carbon filled, wear grade, high load)", "PEEK (30% carbon fiber, lubricated)",
+"PEEK (40% carbon fiber)" and the other PEEK-modified records. The 25–35% wear grade (tradename AvaSpire) has no
+minimum or maximum service temperature in its datasheet at all, so any temperature Limit removes it. It isn't
+rated too warm or too cold: Granta has no rating. Its other values (from the datasheet; `*` marks estimates):
+
+| Property | Value |
+|---|---|
+| Composition | PEEK blend (possibly with PPSU), 15–25% carbon fibre, 0–10% graphite, 0–10% PTFE * |
+| Glass temperature | 303–334 °F * |
+| Thermal expansion coefficient | 5.49–5.61 µstrain/°F |
+| Density | 0.0524–0.0535 lb/in³ |
+| Fatigue strength at 10⁷ cycles | 7.69–8.5 ksi * |
+| Fracture toughness | 6.03–6.48 ksi·in^0.5 * |
+| Hardness | 33–35 HV * |
+| Price per unit volume | 3,060–3,260 USD/ft³ * |
+
+Its expansion sits within about 1 µstrain/°F of the iron and steel stack, unlike unfilled PEEK (about 26). Its price
+is why the stack's 1,500 cap would have been wrong for vanes. They come back by hand on the vane chart
+([D26](decisions.md)). The other failing PEEK records weren't opened, so their reason isn't checked.
+
+The ranking on the Stage 3 chart hasn't been read yet.
+
+## Housing screen in Granta
+
+Project `X:\ME559\pump-housing.ces`, built 2026-11-05: Level 3, MaterialUniverse: All materials, every Limit passing
+on the whole record. Thresholds are in [D27](decisions.md): the stack's temperature, price and toughness, a casting
+limit, and no expansion limit.
+
+| Stage | Type | Settings | Pass when | Pass |
+|---|---|---|---|---|
+| 1 | Limit | Thermal properties. Maximum service temperature: minimum 150 °F. Minimum service temperature: maximum −20 °F. Logic AND. | Whole record | 2,866 of 4,392 |
+| 2 | Limit | Price per unit volume: maximum 1,500 USD/ft³. | Whole record | 1,724 of 4,392 |
+| 3 | Limit | Impact & fracture properties. Fracture toughness: minimum 10 ksi·in^0.5. | Whole record | 793 of 4,392 |
+| 4 | Limit | Processing properties. Metal casting: Acceptable or Excellent. | Whole record | 129 of 4,392 |
+| 5 | Chart | Y: Yield strength (elastic limit) (ksi). X: Price per unit volume (USD/ft³). Both logarithmic, autoscale. | — | 129 of 4,392 |
+| 6 | Chart | Y: Fracture toughness (ksi·in^0.5). X: Yield strength (elastic limit) (ksi). Both logarithmic, autoscale. | — | 129 of 4,392 |
+
+**What passes Stage 4, by family:**
+
+| Family | Records | Examples |
+|---|---|---|
+| Cast aluminium | 45 | 356.0 and A356.0 sand and permanent mold T6; die-cast 380.0, A380.0, 383.0 |
+| Cast magnesium | 27 | AZ91, AM60, WE43 |
+| Cast austenitic stainless | 16 | CF-8, CF-8M, CF-3 |
+| Ni-Resist (austenitic cast iron) | 11 | EN GJSA XNi22, XNi35 |
+| Cast martensitic stainless | 9 | CA-15, CA-40, CA-6NM |
+| Gray cast iron | 6 | EN GJL 100–350 |
+| Cast lead alloys | 6 | Lead-calcium, lead-antimony |
+| Cast carbon steel | 4 | SA216 WCC (a pressure-vessel valve-body grade) |
+| Cast ferritic stainless | 3 | CB-30, CC-50 |
+| Cast low alloy steel | 2 | SAE 4130, 4335M |
+
+Lead and magnesium alloys are casting-capable but have no business in a refrigerant pressure housing, so the 33 of
+them (6 lead, 27 magnesium) are removed by hand, leaving 96 ([D31](decisions.md)). What rules them out isn't in
+Granta: lead is weak (about 5 ksi yield) and toxic, and magnesium corrodes and is generally kept out of contact with
+halogenated refrigerants. They still show in the project file and in
+[data/granta/pump-housing.tsv](../data/granta/pump-housing.tsv).
+
+**Stage 5 readings** (clicked; ±20% off the log axes):
+
+| Record | Price per volume (USD/ft³) | Yield strength (ksi) |
+|---|---|---|
+| Gray cast iron EN GJL 200 | 75.9–88.3 | 18.9–20.7 |
+| Ductile iron EN GJS 350-22-LT (added by hand, D25; fails the screen) | 74.2–85.8 | 31.2–37.6 |
+| Aluminium A390.0, permanent mold cast, F | 229–253 | 28.9–29 |
+| Martensitic stainless CA-15, tempered at 315 °C (top of the cluster) | About 400 | About 150 |
+| Lead-calcium alloy, cast, 0.3% Sn | 762–833 | 4.93–5.66 |
+
+**GJS 350-22-LT datasheet** (Level 3; `*` marks estimates): fracture toughness 30–49.1 ksi·in^0.5, fatigue strength
+26.1–28.3 ksi, elongation 22–29%, hardness 115–140 HV, expansion 5.56–6.94 µstrain/°F, price 74.2–85.8 USD/ft³ *,
+minimum service temperature −238 to 14 °F. That last range is why it fails Stage 1. It is labelled on both charts
+and costs the same as gray iron with about 1.7× the yield strength and twice the toughness. So it sits up and to the
+left of everything else in the cheap corner of the yield vs. price chart.
+
+Wall thickness t = pR/σ, so material cost per housing scales with price × ρ / σ_y. That ranking (an index line on
+Stage 5) and leak-before-break (K_IC²/σ_y on Stage 6) haven't been drawn yet.
+
+## Shaft screen in Granta
+
+Project `X:\ME559\pump-shaft.ces`, built 2026-11-05 ([D28](decisions.md)). It repeats the stack's Stages 1, 2 and 4,
+then charts fatigue strength against price. Stage 2 was first built with the stack's 1,500 USD/ft³ and 7.5 µstrain/°F
+(434 and 293 passing); later on 2026-11-05 it was changed to 2,000 USD/ft³ ([D30](decisions.md)) and 7.6 µstrain/°F
+([D29](decisions.md)). Current settings:
+
+| Stage | Type | Settings | Pass when | Pass |
+|---|---|---|---|---|
+| 1 | Limit | Maximum service temperature ≥ 150 °F; minimum service temperature ≤ −20 °F | Whole record | 2,866 of 4,392 |
+| 2 | Limit | Price per unit volume ≤ 2,000 USD/ft³; thermal expansion ≤ 7.6 µstrain/°F | Whole record | 538 of 4,392 |
+| 3 | Limit | Fracture toughness ≥ 10 ksi·in^0.5 | Whole record | 370 of 4,392 |
+| 4 | Chart | Y: Fatigue strength at 10⁷ cycles (ksi). X: Price per unit volume (USD/ft³). Both logarithmic, autoscale. | — | 370 of 4,392 |
+
+The shaft has no hardness stage, and its price cap is higher than the stack's, so it passes more (370 against the
+stack's 305).
+
+**The two shaft steels named in [Candidates by component](#candidates-by-component) failed Stage 2 at first:**
+
+- **AISI 4140**: normalized 4140 has expansion 6.39–7.5 µstrain/°F (6.51 at 73.4 °F), so its top value landed on the
+  7.5 cap and the whole-record rule removed it. Its price, 241–368 USD/ft³, passes. The same happened in the stack's
+  rotor screen. With the cap at 7.6 it passes, except the tempers at 205 °C and 315 °C, which fail Stage 1.
+- **17-4PH stainless**: price 1,460–1,660 USD/ft³ (H1150) ran over 1,500. 15-5PH failed the same way. At 2,000 every
+  17-4PH and 15-5PH record passes.
+
+The two changes add 77 records, mostly stainless (50) and low alloy steels (18). AISI 4340, 416 and 420 passed
+before and still do.
 
 ## Thermal expansion
 
