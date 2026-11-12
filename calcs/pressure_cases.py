@@ -5,7 +5,7 @@ the inlet margin to boiling, the outlet temperature rise, the pressure in an idl
 in gauge pressure, and liquid trapped between closed isolation valves (Q27).
 Prints Markdown tables quoted in docs/requirements.md and docs/functional-design.md.
 
-    python calcs/pressure_cases.py
+    uv run calcs/pressure_cases.py
 """
 from CoolProp.CoolProp import PropsSI
 

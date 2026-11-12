@@ -4,7 +4,7 @@ The 3.22 in cam bore and 6 vanes in the team notes are illustrative (a round rin
 and layout are still open (D7). The 50 um tip-wear allowance is the team's working value.
 Prints Markdown tables quoted in docs/requirements.md and docs/functional-design.md.
 
-    python calcs/vane_kinematics.py
+    uv run calcs/vane_kinematics.py
 """
 from math import pi
 
