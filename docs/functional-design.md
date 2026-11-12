@@ -99,7 +99,7 @@ detailed model only where it could change the decision.
 | 0 | Ideal displacement ([calcs/displacement.py](../calcs/displacement.py)) | Flow vs. e and L | Done |
 | 1 | Chamber and leakage model: each vane pocket as a control volume, pressure vs. shaft angle, leakage through the side, tip and slot clearances, port timing | Volumetric efficiency, real flow, pressure ripple, shaft power. Sets the smallest practical pump ([Q2](open-questions.md)) and the clearance budget. | Built for the single-lobe layout ([below](#level-1-vane-pocket-model)); balanced layout to add |
 | 2 | Vane dynamics: centrifugal force, under-vane pressure, friction and inertia on each vane | Tip contact force, lift-off, PV and wear rate. Feeds the 50,000 h wear allowance in [calcs/reliability.py](../calcs/reliability.py). | Started: the Level 1 model computes tip force, friction and lift-off. Under-vane timing ([Q30](open-questions.md)), PV and wear next |
-| 3 | Finite-element analysis | Vane, rotor and shaft fatigue ([infinite life](#fatigue)), housing and can stress at the 300 psig design pressure ([D32](decisions.md)), deflections that use up clearance | Planned; tool not chosen |
+| 3 | Finite-element analysis | Vane, rotor and shaft fatigue ([infinite life](#fatigue)), housing and can stress at the 300 psig design pressure ([D32](decisions.md)), deflections that use up clearance | Planned; tool proposed in [D6](decisions.md#d6-tooling) |
 | 4 | 3D CFD with a moving mesh | Port shape, local flow losses | Only if a lower level can't answer a question |
 
 How each step is checked:
@@ -111,6 +111,31 @@ Material properties from the Granta screen ([materials.md](materials.md#selectio
 models: expansion sets the clearance change over temperature and so the leakage, density sets the vane tip force, and
 fatigue strength sets the safety factor. In the other direction, the clearance budget from Level 1 sets how closely
 the stack materials' expansion has to match.
+
+### Order of work
+
+Set 2026-11-12. The levels above are the models. The hand checks below fill the gaps between them, for the bearings,
+the coupling, the ports and the relief. Each step uses results from the steps before it. The tool for each step,
+with an industry-standard option, is in [D6](decisions.md#d6-tooling).
+
+| Step | Work | Uses | Status |
+|---|---|---|---|
+| 1 | Ideal flow (Level 0) | — | Done |
+| 2 | Vane-pocket model (Level 1). Add the balanced layout, then choose the layout ([D7](decisions.md)) | Step 1 | Single-lobe done; balanced layout next |
+| 3 | Vane forces and wear (Level 2): fix the lift-off ([Q30](open-questions.md)), then PV and wear life | Step 2 | Started |
+| 4 | Port pressure drop, by hand ([Q29](open-questions.md)) | Flow from step 2 | Not started |
+| 5 | Bearing load and life ([D16](decisions.md), [bearing trade](#bearing-trade-study)) | Side load from steps 2–3 | Not started |
+| 6 | Magnetic coupling: start-up torque at −20 °F, breakaway torque, and eddy-current heat if the can is metal ([Q28](open-questions.md), [Q22](open-questions.md)) | Torque from steps 2–3 | Not started |
+| 7 | Relief valve set point and size, by hand ([Q27](open-questions.md)) | Flow from step 2, [calcs/pressure_cases.py](../calcs/pressure_cases.py) | Not started |
+| 8 | FEA (Level 3) | Final part shapes and sizes from steps 2–7 | Planned |
+| 9 | CFD (Level 4) | Only if a step above can't answer a question | — |
+
+Why this order:
+
+- **The layout is chosen early.** It sets the bearing load, the ring shape and the port plates, so every step after
+  step 2 depends on it.
+- **FEA comes late,** so it runs on the final shapes and sizes instead of being redone after each change.
+- **Cavitation isn't analysed,** because [D9](decisions.md) keeps the fluid liquid at all times.
 
 ### Level 1: vane-pocket model
 

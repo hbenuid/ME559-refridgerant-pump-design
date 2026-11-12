@@ -71,8 +71,8 @@ Ashby's method, which Granta EduPack is built around ([D21](decisions.md)). For 
    → leakage; density → vane tip force → wear; fatigue strength → corrected endurance limit → safety factor. If a
    check fails, tighten that constraint and screen again.
 6. **Pair with a process and cost it.** Material and process go together (PM steel with powder metallurgy, gray iron
-   with sand casting). Granta's Part Cost Estimator at 7,000/yr over 35,000 units ([D18](decisions.md)) feeds
-   [economics.md](economics.md).
+   with sand casting). Granta's Part Cost Estimator at 7,000/yr over 35,000 units ([D18](decisions.md)) compares
+   the candidates during screening. The final part costs come from aPriori ([economics.md](economics.md)).
 7. **Record** each group's choice in [decisions.md](decisions.md): constraints, chart, finalists, choice and reason.
 
 ### Part groups

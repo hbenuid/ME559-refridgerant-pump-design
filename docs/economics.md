@@ -15,8 +15,10 @@ unit cost = material
           + overhead and scrap allowance
 ```
 
-No numbers yet. Collect sources for material prices, machine rates and tooling costs and cite them in
-[references.md](references.md). Build the model as a script in `calcs/` once we have them.
+No numbers yet. The parts we make are costed in aPriori 26 (in Citrix, [D6](decisions.md#d6-tooling)) from the
+teammates' Onshape models, exported as STEP, at 7,000/yr: material, processing and tooling per part. Bought parts
+(motor, magnetic coupling, bearings, seals, valves) use catalogue prices or quotes. Cite every source in
+[references.md](references.md).
 
 The final presentation has to state the predicted production cost per pump, and a cost comparison document (PDF) is
 one of the supporting deliverables ([requirements.md](requirements.md#final-deliverables)). Each purchased part needs
