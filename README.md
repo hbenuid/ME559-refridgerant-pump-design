@@ -50,6 +50,7 @@ All due on the day of the final presentation (date not given yet). Full requirem
 
 | Path | What it holds |
 |---|---|
+| [AGENTS.md](AGENTS.md) | Instructions for AI agents working in this repo: where things go, uv, writing style, git |
 | [docs/requirements.md](docs/requirements.md) | The brief, our interpretation of it, and derived numbers |
 | [docs/open-questions.md](docs/open-questions.md) | Unanswered questions and the working assumptions we use until they're answered |
 | [docs/decisions.md](docs/decisions.md) | Decision log: what was decided, when, and why |
