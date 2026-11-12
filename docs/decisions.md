@@ -9,7 +9,7 @@ One entry per decision. Never delete an entry; if a decision is reversed, add a 
 | D3 | 2026-10-22 | Flow rate is ours to choose | Decided; method in D10 |
 | D4 | 2026-10-22 | Hermetic construction, motor inside the shell | Shell closure refined by D13; motor moved outside by D33 |
 | D5 | 2026-10-22 | Rotor diameter fixed at 3.1 in | Constraint |
-| D6 | 2026-10-22 | Tooling: Python + CoolProp for calcs, Onshape for CAD, Markdown in this repo for documentation | Decided |
+| D6 | 2026-10-22 | Tooling: Python + CoolProp for calcs, Onshape for CAD, Markdown in this repo for documentation; aPriori for cost (2026-11-12) | Decided; analysis tools per step proposed ([below](#d6-tooling)) |
 | D7 | — | Vane layout: single-lobe eccentric vs. balanced double-lobe | **Open**: trade study in [functional-design.md](functional-design.md#vane-layout-trade-study) |
 | D8 | — | Lubrication assumption: oil-free vs. oil present | **Open** ([Q3](open-questions.md)) |
 | D9 | 2026-10-22 | The fluid is liquid at all times over −20 °F to 150 °F | Decided (course guidance) |
@@ -37,6 +37,7 @@ One entry per decision. Never delete an entry; if a decision is reversed, add a 
 | D31 | 2026-11-05 | Cast lead and magnesium alloys are removed from the housing shortlist by hand | Decided |
 | D32 | 2026-11-05 | The design pressure is 300 psig, set by a pump standing idle at 150 °F | Decided |
 | D33 | 2026-11-05 | Magnetic drive: a standard motor outside the housing drives the pump through a magnetic coupling | Decided; containment can open ([Q28](open-questions.md)) |
+| D34 | 2026-11-10 | The smallest practical pump must deliver at least 85% of its swept volume at 150 °F | Decided |
 
 ## D1: Liquid pump
 
@@ -74,6 +75,52 @@ rotor length, and vane count and thickness.
 Calculations are Python scripts in `calcs/`, using CoolProp for R-134a properties, so every number can be reproduced
 and diffed. CAD is done in Onshape, with STEP and PDF snapshots stored in `cad/`. Documentation is Markdown in this
 repo, which can be exported to PDF later.
+
+Update (2026-11-10): NumPy and Matplotlib joined CoolProp for the
+[vane-pocket model](functional-design.md#level-1-vane-pocket-model). Its graphs are PNG files in `docs/figures/`,
+written by the script.
+
+Update (2026-11-12): software available through the university's Citrix, as listed on that date:
+
+| Use | Software |
+|---|---|
+| Materials | Granta EduPack 2026 R1 (in use) |
+| Stress (FEA) | Ansys Workbench 2026 R1, Ansys Mechanical 2026 R1, Abaqus |
+| Flow (CFD) | Ansys Fluent 2026 R1, Ansys CFX 2026 R1, CFD-Post 2026 R1, Ansys Discovery 2026 R1 |
+| Multiphysics | COMSOL Multiphysics (classkit licence) |
+| Manufacturing cost | aPriori 26 |
+| Math and plotting | MATLAB R2026a, Wolfram, Origin 2026b, MathType |
+| CAD | SOLIDWORKS 2026 Education, Creo Parametric, Autodesk Fusion, AutoCAD 2027 |
+| Not relevant to the pump | Zemax OpticStudio, FENSAP-ICE, GMAT, LTspice, Vivado, Virtual Tissue Sim, FileMaker Pro, GrabCAD Print, iNspect Express, Boa Emulator Config |
+
+Tools for each step of the [order of work](functional-design.md#order-of-work), set 2026-11-12. The proposed tools
+are not decided yet. They are ones that run from the command line in this repo, so the analysis can be rerun when a
+size changes. The last column is the industry-standard tool available in Citrix, kept as an option.
+
+| Step | Work | Proposed tool (command line) | Industry-standard option (Citrix) |
+|---|---|---|---|
+| 1 | Ideal flow | Python (done) | MATLAB |
+| 2 | Vane-pocket model; add the balanced layout, then choose the layout ([D7](functional-design.md#vane-layout-trade-study)) | Python (single-lobe done) | MATLAB / Simulink (Simscape Fluids)\* |
+| 3 | Vane forces and wear ([Q30](open-questions.md)) | Python (started) | MATLAB |
+| 4 | Port pressure drop ([Q29](open-questions.md)) | Python, by hand | MATLAB |
+| 5 | Bearing load and life ([D16](functional-design.md#bearing-trade-study)) | Python, by hand | MATLAB |
+| 6 | Magnetic coupling: start-up and breakaway torque, can heat ([Q28](open-questions.md)) | Supplier catalogue and Python; no magnetic simulation | COMSOL, AC/DC module\* |
+| 7 | Relief valve set point and size ([Q27](open-questions.md)) | Python, by hand | MATLAB / Simulink (Simscape Fluids)\* |
+| 8 | Stress and fatigue (FEA) | CalculiX on the STEP files; fatigue checked in Python from its stresses | Ansys Mechanical (in Workbench), or Abaqus |
+| 9 | 3D flow (CFD), only if needed | OpenFOAM | Ansys Fluent (in Workbench) |
+
+\* Depends on the university licence. Check that the add-on is installed before relying on it.
+
+These are set, not proposed:
+
+| Work | Tool | Industry-standard option (Citrix) |
+|---|---|---|
+| CAD | Onshape, by teammates. Each part is exported as STEP into `cad/` for analysis and costing. | SOLIDWORKS or Creo |
+| Materials | Granta EduPack 2026 R1 ([materials.md](materials.md#selection-in-granta)) | The same; industry uses Granta MI, the company version |
+| Cost | aPriori 26, from the teammates' CAD. Bought parts use catalogue prices or quotes ([economics.md](economics.md#cost-model-structure)). | The same; aPriori is an industry tool |
+
+Ansys Mechanical and Fluent are the options that matter most: industry uses them for steps 8 and 9, and they handle
+contact, heat and vibration, which the CalculiX setup here (linear static only) doesn't.
 
 ## D9: Liquid at all times
 
@@ -324,3 +371,11 @@ What changes:
 This supersedes the motor location in D4 and D13. The bolted housing with O-ring joints (D13), the isolation valves
 ([D15](#d15-integral-isolation-valves)) and the replaceable cartridge stay. See
 [functional-design.md](functional-design.md#magnetic-drive).
+
+## D34: Volumetric efficiency pass mark 85% at 150 °F
+
+[D10](#d10-smallest-practical-pump) sizes the smallest practical pump but needed a pass mark. The pump must deliver
+at least 85% of its swept volume at 150 °F, where the liquid is thinnest and leaks most. Oil vane pumps reach about
+90%, and R-134a is about 100× thinner than oil, so 85% allows ordinary precision machining with a modest pump. Chosen
+on 2026-11-10 from 80%, 85% and 90%: a higher mark needs tighter gaps or a bigger pump, and a lower one wastes more
+power heating the liquid. The [vane-pocket model](functional-design.md#level-1-vane-pocket-model) applies it.
