@@ -37,6 +37,7 @@ One entry per decision. Never delete an entry; if a decision is reversed, add a 
 | D31 | 2026-11-05 | Cast lead and magnesium alloys are removed from the housing shortlist by hand | Decided |
 | D32 | 2026-11-05 | The design pressure is 300 psig, set by a pump standing idle at 150 °F | Decided |
 | D33 | 2026-11-05 | Magnetic drive: a standard motor outside the housing drives the pump through a magnetic coupling | Decided; containment can open ([Q28](open-questions.md)) |
+| D34 | 2026-11-10 | The smallest practical pump must deliver at least 85% of its swept volume at 150 °F | Decided |
 
 ## D1: Liquid pump
 
@@ -74,6 +75,10 @@ rotor length, and vane count and thickness.
 Calculations are Python scripts in `calcs/`, using CoolProp for R-134a properties, so every number can be reproduced
 and diffed. CAD is done in Onshape, with STEP and PDF snapshots stored in `cad/`. Documentation is Markdown in this
 repo, which can be exported to PDF later.
+
+Update (2026-11-10): NumPy and Matplotlib joined CoolProp for the
+[vane-pocket model](functional-design.md#level-1-vane-pocket-model). Its graphs are PNG files in `docs/figures/`,
+written by the script.
 
 ## D9: Liquid at all times
 
@@ -324,3 +329,11 @@ What changes:
 This supersedes the motor location in D4 and D13. The bolted housing with O-ring joints (D13), the isolation valves
 ([D15](#d15-integral-isolation-valves)) and the replaceable cartridge stay. See
 [functional-design.md](functional-design.md#magnetic-drive).
+
+## D34: Volumetric efficiency pass mark 85% at 150 °F
+
+[D10](#d10-smallest-practical-pump) sizes the smallest practical pump but needed a pass mark. The pump must deliver
+at least 85% of its swept volume at 150 °F, where the liquid is thinnest and leaks most. Oil vane pumps reach about
+90%, and R-134a is about 100× thinner than oil, so 85% allows ordinary precision machining with a modest pump. Chosen
+on 2026-11-10 from 80%, 85% and 90%: a higher mark needs tighter gaps or a bigger pump, and a lower one wastes more
+power heating the liquid. The [vane-pocket model](functional-design.md#level-1-vane-pocket-model) applies it.

@@ -60,6 +60,7 @@ All due on the day of the final presentation (date not given yet). Full requirem
 | [docs/serviceability.md](docs/serviceability.md) | Field repair, remanufacture and recycling: service routes, design features, repair-vs-swap decision |
 | [docs/references.md](docs/references.md) | Sources |
 | [calcs/](calcs/) | Python calculations. Every number in the docs should trace back to a script here |
+| [docs/figures/](docs/figures/) | Graphs written by the calculation scripts (vane-pocket model) |
 | [data/granta/](data/granta/) | Granta EduPack Pass/Fail tables, one per selection project ([materials.md](docs/materials.md#selection-in-granta)) |
 | [notes/](notes/) | Teammates' notes as received (Word). Their content is in the docs ([references.md](docs/references.md#team-notes)) |
 
@@ -75,6 +76,7 @@ python3 -m venv .venv
 .venv/bin/python calcs/reliability.py
 .venv/bin/python calcs/pressure_cases.py
 .venv/bin/python calcs/vane_kinematics.py
+.venv/bin/python calcs/vane_pocket_model.py    # about a minute; also redraws docs/figures/
 ```
 
 Each script prints Markdown tables that are pasted into the docs.

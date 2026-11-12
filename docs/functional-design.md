@@ -27,10 +27,17 @@ widest and narrowest points.
 - **Balanced double-lobe** (cam ring with major radius R_a, minor radius R_b ≈ R_r, stroke s = R_a − R_b): there are
   two suction and two discharge zones per revolution, giving **V = 2L[π(R_a² − R_b²) − zts]**.
 
-Check before relying on this: Esposito, *Fluid Power with Applications*, gives V = (π/2)(D_c + D_r)eL for the
-single-lobe pump. That is about half the value above. The derivation here counts each pocket's full swing from
-minimum to maximum volume, and the 2eL(πD − zt) form also appears in hydraulics literature (source to add to
-[references.md](references.md)). Confirm against a second source.
+Checked against the pocket geometry (2026-11-10, [vane-pocket model](#level-1-vane-pocket-model)): integrating each
+pocket's area at its smallest and largest gives the swept volume directly, with no formula. Two results:
+
+- **Esposito's V = (π/2)(D_c + D_r)eL is the crescent volume**, the liquid between rotor and ring at one instant
+  (π(R_c² − R_r²)L). Each pocket swings from nearly empty to twice the crescent's average height, so the swept volume
+  per turn is about twice the crescent. The 2eL(πD_c − zt) form is the right one.
+- **2eL(πD_c − zt) is exact only for many vanes.** It takes each pocket's volume at the single widest and narrowest
+  points, but a real pocket spans a whole vane pitch. At e = 0.05 in, L = 1 in, the exact swept volume is lower by
+  3.9% (6 vanes), 2.1% (8), 1.3% (10) and 0.8% (12). The tables below use the formula, so they read 1–4% high. It
+  also assumes the under-vane spaces return what they take in; if they are fed from the pocket's own port, they
+  pump too and add z·t·2e·L.
 
 Theoretical flow from [calcs/displacement.py](../calcs/displacement.py) at 3600 RPM, 100% volumetric efficiency, with
 placeholder z = 8 and t = 0.10 in:
@@ -78,6 +85,10 @@ What stops further shrinking:
   (small L) tilt more under the pressure difference across them.
 - **Shaft, bearing span and coupling packaging** in the housing.
 
+The vane-pocket model now gives the leakage side of this ([results below](#smallest-practical-pump-from-the-model)).
+With a 0.0005 in side gap, leakage stops being the binding limit: manufacturing tolerance on e, vane proportions and
+the under-vane feed take over.
+
 ## Modeling plan
 
 The calculations go up in levels of detail. Each question gets the simplest model that can answer it, and a more
@@ -86,8 +97,8 @@ detailed model only where it could change the decision.
 | Level | Model | What it answers | Status |
 |---|---|---|---|
 | 0 | Ideal displacement ([calcs/displacement.py](../calcs/displacement.py)) | Flow vs. e and L | Done |
-| 1 | Chamber and leakage model: each vane pocket as a control volume, pressure vs. shaft angle, leakage through the side, tip and slot clearances, port timing | Volumetric efficiency, real flow, pressure ripple, shaft power. Sets the smallest practical pump ([Q2](open-questions.md)) and the clearance budget. | Next |
-| 2 | Vane dynamics: centrifugal force, under-vane pressure, friction and inertia on each vane | Tip contact force, lift-off, PV and wear rate. Feeds the 50,000 h wear allowance in [calcs/reliability.py](../calcs/reliability.py). | Planned |
+| 1 | Chamber and leakage model: each vane pocket as a control volume, pressure vs. shaft angle, leakage through the side, tip and slot clearances, port timing | Volumetric efficiency, real flow, pressure ripple, shaft power. Sets the smallest practical pump ([Q2](open-questions.md)) and the clearance budget. | Built for the single-lobe layout ([below](#level-1-vane-pocket-model)); balanced layout to add |
+| 2 | Vane dynamics: centrifugal force, under-vane pressure, friction and inertia on each vane | Tip contact force, lift-off, PV and wear rate. Feeds the 50,000 h wear allowance in [calcs/reliability.py](../calcs/reliability.py). | Started: the Level 1 model computes tip force, friction and lift-off. Under-vane timing ([Q30](open-questions.md)), PV and wear next |
 | 3 | Finite-element analysis | Vane, rotor and shaft fatigue ([infinite life](#fatigue)), housing and can stress at the 300 psig design pressure ([D32](decisions.md)), deflections that use up clearance | Planned; tool not chosen |
 | 4 | 3D CFD with a moving mesh | Port shape, local flow losses | Only if a lower level can't answer a question |
 
@@ -100,6 +111,226 @@ Material properties from the Granta screen ([materials.md](materials.md#selectio
 models: expansion sets the clearance change over temperature and so the leakage, density sets the vane tip force, and
 fatigue strength sets the safety factor. In the other direction, the clearance budget from Level 1 sets how closely
 the stack materials' expansion has to match.
+
+### Level 1: vane-pocket model
+
+[calcs/vane_pocket_model.py](../calcs/vane_pocket_model.py), built 2026-11-10 for the single-lobe layout. It follows
+each pocket between two vanes through a turn of the rotor and tracks the pressure in it. From the pocket pressures it
+works out the real flow, the shaft torque and power, and the force holding each vane tip on the ring. It is a "0D"
+model: each pocket has one pressure, not a 3D flow field. About 33,000 cases run in under a minute.
+
+#### Choices
+
+Agreed with the team on 2026-11-10.
+
+| Item | Choice | Why |
+|---|---|---|
+| Layout | Single-lobe first; balanced added later ([D7](decisions.md)) | Simpler to build and check |
+| Side gap (rotor face to side plate) | Swept from 0.0003 to 0.002 in | Leakage grows with the cube of the gap; the result sets the machining tolerance |
+| Pass mark | Volumetric efficiency ≥ 85% at 150 °F ([D34](decisions.md)) | Defines the smallest practical pump |
+| Temperatures | 150 °F and −20 °F | [D9](decisions.md)'s bounding cases: thinnest liquid (most leakage) and thickest (most drag) |
+| Under-vane feed | Both compared: **outlet pressure, always** under every vane; **pocket pressure, switching**, with grooves feeding inlet pressure over 0–180° and outlet pressure over 180–360° | What holds the vanes out decides leakage, friction and lift-off |
+| Vane count | 6 to 12 | |
+| Port edges | Plain, each land 1° wider than a pocket's opening; notches later | |
+| Vane material | Tool steel, carbon-graphite, PEEK wear grade. Each sets the vane mass and, through its expansion, the vane-end and slot gaps at temperature. | Feeds the vane choice ([materials.md](materials.md#current-choices)) |
+| Friction | 0.15, vane tip on ring and vane in slot | Rubbing in a thin liquid with no oil ([Q3](open-questions.md)); errs toward more power |
+| Ports | Big enough to have no pressure loss: pockets see exactly 55 and 150 psig | Port sizing comes later ([Q29](open-questions.md)) |
+
+The vane tip gap is not swept. A tip touches the ring, so its gap is set by surface roughness, not by machining.
+
+#### How it works
+
+1. **Pocket volume.** Seen from the rotor centre, the ring sits at ρ(θ) = −e cos θ + √(R_c² − e² sin² θ), with the
+   ring touching the rotor at top dead centre (R_c = R_r + e). A pocket's cross-section is ∫(ρ² − R_r²)/2 dθ between
+   its two vanes, less half of each vane's exposed part.
+2. **Ports.** A pocket is open to the inlet over 0–180° and to the outlet over 180–360°. At each dead centre it is
+   sealed for 1° as it changes over.
+3. **Leakage** through four paths (table below), each a thin-film flow, Q ∝ gap³ × Δp / viscosity.
+4. **Pressure.** Open pockets sit at port pressure. A sealed pocket follows dp/dt = (β/V)(Q_leak − dV/dt). β = ρa²
+   from CoolProp is 100 MPa at 150 °F and 790 MPa at −20 °F. Hydraulic oil is about 1,500 MPa, so R-134a is much
+   springier. When a sealed pocket opens, the port pushes in, or takes out, the volume that brings it to port
+   pressure.
+5. **Vane forces.** Pushing a vane out: spinning (m ω² r) and the under-vane pressure. Pushing it in: the average of
+   the two pocket pressures on its tip, its own radial acceleration, and slot friction. The rest is the tip force on
+   the ring. Below zero, the vane lifts off.
+6. **Torque.** Pressure on each vane's exposed faces, the ring's push on each tip (which leans with the ring's
+   slope), friction, and viscous drag on the rotor faces.
+
+The whole pump repeats every vane pitch, so the model runs one pitch, after one pitch of warm-up, in 0.05° steps.
+
+| Leakage path | How it's modelled | Notes |
+|---|---|---|
+| Rotor faces to side plates, both sides | Thin-film (Reynolds) flow in the side gap, solved exactly on the ring-shaped face from the slot bottoms to the rotor rim with a Fourier series. Rim at the pocket pressures, ramping across each vane end; inner edge at the under-vane groove pressure. | The main path. For the switching feed, liquid also flows from the outlet groove to the inlet groove across the face inside the grooves, which is assumed to dead-end at the shaft ([Q32](open-questions.md)). |
+| Vane ends | Gap across the vane thickness, over the vane's exposed height | The gap changes with temperature by vane material |
+| Vane tips | 0.0001 in effective gap (surface roughness) over a 0.02 in land | Tiny while the vane touches the ring |
+| Vane slots | 0.0005 in gap down one side of the vane, over the length still in the slot, between the under-vane space and the neighbouring pocket with the larger pressure difference | The gap changes with temperature by vane material |
+
+Placeholders, to replace as the vane, shaft and port design firms up:
+
+| Placeholder | Value |
+|---|---|
+| Vane thickness | 0.10 in (as in [calcs/displacement.py](../calcs/displacement.py)) |
+| Vane height | max(6e, 0.25 in), so two thirds of the vane stays in its slot at full stroke |
+| Inner edge of the rotor face | 0.375 in radius (0.75 in shaft) |
+| Gaps set at | 68 °F. Ring, side plates and rotor expand alike (6.5 µstrain/°F), so the side gap holds over temperature. |
+| Tool steel vane | 0.283 lb/in³, 6.5 µstrain/°F |
+| Carbon-graphite vane | 0.065 lb/in³ (1.8 g/cm³), 2.5 µstrain/°F: typical values; supplier data pending ([D23](decisions.md)) |
+| PEEK wear grade vane | 0.053 lb/in³, 5.55 µstrain/°F: the Granta record in [materials.md](materials.md#vane-screen-in-granta) |
+
+#### Verification
+
+The code is checked against cases with known answers ([how each step is checked](#modeling-plan)). Reference pump:
+e = 0.05 in, L = 1.0 in, 8 vanes, side gap 0.0005 in.
+
+| Check | Expected | Model | Result |
+|---|---|---|---|
+| Rigid liquid, no gaps, no friction (outlet feed): delivered flow equals the swept volume | 14.115 GPM | 14.115 GPM | 0.00% off |
+| No gaps, friction or drag (outlet feed): mean torque equals swept volume × Δp / 2π | 13.69 in·lbf | 13.69 in·lbf | 0.00% off |
+| Same two checks, switching feed | 15.362 GPM, 14.90 in·lbf | 15.362 GPM, 14.90 in·lbf | 0.00%, 0.02% off |
+| Side gap: flow into the pockets from the faces equals flow out of the grooves (both feeds) | equal | equal | 0.000% off |
+| Energy balance at 150 °F: shaft power = swept volume × Δp + friction + drag | 0% left over | −0.00% (outlet), −0.04% (switching) | closes |
+| Volume balance: inlet flow − outlet flow = compression of the pockets' swept volume | 0.0924 GPM | 0.0923 GPM | 0.1% off |
+| Side-gap solver: 2,048 against 8,192 points around the rim | 0.3918 GPM leakage | 0.3918 GPM | 0.01% off |
+
+Not yet validated against test data from a real pump (to find: published vane-pump leakage or efficiency data at a
+known clearance).
+
+#### Results: reference pump
+
+e = 0.05 in, L = 1.0 in, 8 vanes, side gap 0.0005 in.
+
+| Under-vane feed | Vane | Temp (°F) | Swept (GPM) | Delivered (GPM) | Vol. eff. | Shaft (hp) | Hydraulic (hp) | Overall eff. | Tip friction (hp) | Mean / peak torque (in·lbf) | Tip force min / max (lbf) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| Outlet, always | Tool steel | 150 | 14.12 | 13.18 | 93.4% | 1.81 | 0.73 | 40% | 1.01 | 31.7 / 32.4 | 4.2 / 14.0 |
+| Outlet, always | Tool steel | −20 | 14.12 | 13.86 | 98.2% | 1.84 | 0.77 | 42% | 1.01 | 32.2 / 33.0 | 2.3 / 14.0 |
+| Outlet, always | Carbon-graphite | 150 | 14.12 | 13.07 | 92.6% | 1.43 | 0.72 | 51% | 0.63 | 24.9 / 25.6 | 0.8 / 10.4 |
+| Outlet, always | Carbon-graphite | −20 | 14.12 | 13.88 | 98.4% | 1.46 | 0.77 | 53% | 0.63 | 25.5 / 26.5 | **−1.1** / 10.4 |
+| Outlet, always | PEEK wear grade | 150 | 14.12 | 13.15 | 93.2% | 1.40 | 0.73 | 52% | 0.61 | 24.6 / 25.3 | 0.6 / 10.2 |
+| Outlet, always | PEEK wear grade | −20 | 14.12 | 13.87 | 98.2% | 1.44 | 0.77 | 54% | 0.61 | 25.1 / 26.0 | **−1.3** / 10.2 |
+| Switching | Tool steel | 150 | 15.36 | 14.97 | 97.4% | 1.38 | 0.83 | 60% | 0.51 | 24.1 / 24.9 | **−1.3** / 11.3 |
+| Switching | Tool steel | −20 | 15.36 | 15.26 | 99.4% | 1.41 | 0.85 | 60% | 0.51 | 24.7 / 26.1 | **−1.3** / 11.3 |
+| Switching | Carbon-graphite | 150 | 15.36 | 14.90 | 97.0% | 1.04 | 0.83 | 79% | 0.18 | 18.2 / 18.8 | **−4.9** / 7.5 |
+| Switching | Carbon-graphite | −20 | 15.36 | 15.28 | 99.4% | 1.07 | 0.85 | 79% | 0.18 | 18.8 / 19.5 | **−4.9** / 7.5 |
+| Switching | PEEK wear grade | 150 | 15.36 | 14.96 | 97.4% | 1.02 | 0.83 | 81% | 0.16 | 17.9 / 18.4 | **−5.2** / 7.2 |
+| Switching | PEEK wear grade | −20 | 15.36 | 15.27 | 99.4% | 1.05 | 0.85 | 80% | 0.16 | 18.4 / 19.1 | **−5.2** / 7.2 |
+
+Bold: the vane lifts off the ring somewhere in the turn. Where it does, the leakage and power figures assume the vane
+stays on the ring, so they are optimistic there.
+
+![Pocket pressure over one turn, with the two sealed zones enlarged](figures/vane-pocket-pressure.png)
+
+![Vane tip force over one turn for each vane material and under-vane feed](figures/vane-pocket-tip-force.png)
+
+Sealed-zone pressure, steel vanes:
+
+| Under-vane feed | Temp (°F) | Lowest pocket pressure (psig) | Highest pocket pressure (psig) |
+|---|---|---|---|
+| Outlet, always | 150 | 55 | 154 |
+| Outlet, always | −20 | 55 | 191 |
+| Switching | 150 | 55 | 150 |
+| Switching | −20 | 55 | 155 |
+
+Vane gaps at temperature (both set at 68 °F: vane end = side gap 0.0005 in, slot 0.0005 in):
+
+| Vane | Temp (°F) | Vane-end gap, each end (in) | Slot gap (in) |
+|---|---|---|---|
+| Tool steel | 150 / −20 | 0.00050 / 0.00050 | 0.00050 / 0.00050 |
+| Carbon-graphite | 150 / −20 | 0.00066 / 0.00032 | 0.00053 / 0.00046 |
+| PEEK wear grade | 150 / −20 | 0.00054 / 0.00046 | 0.00051 / 0.00049 |
+
+#### Results: side gap, size and vane count
+
+Volumetric efficiency against side gap at the reference size, steel vanes:
+
+| Side gap (in) | Outlet, always, 150 °F | Outlet, always, −20 °F | Switching, 150 °F | Switching, −20 °F |
+|---|---|---|---|---|
+| 0.0003 | 96% | 99% | 98% | 100% |
+| 0.0005 | 93% | 98% | 97% | 99% |
+| 0.00075 | 85% | 96% | 95% | 99% |
+| 0.001 | 68% | 91% | 90% | 97% |
+| 0.0015 | flows backwards | 71% | 70% | 92% |
+| 0.002 | flows backwards | 32% | 32% | 80% |
+
+"Flows backwards": more liquid leaks from outlet to inlet than the pump moves.
+
+![Volumetric efficiency against side gap for the two under-vane feeds](figures/vane-pocket-efficiency.png)
+
+##### Smallest practical pump, from the model
+
+Smallest swept volume with volumetric efficiency ≥ 85% at 150 °F, 8 steel vanes. The sweep covers e = 0.015–0.15 in
+and L = 0.5–2.0 in. Each cell: e × L (in), then delivered flow and volumetric efficiency. `*` marks the smallest size
+tried, so the leakage limit lies below the sweep.
+
+| Side gap (in) | Outlet, always | Switching |
+|---|---|---|
+| 0.0003 | 0.02 × 0.5: 2.4 GPM, 88% | 0.015 × 0.5*: 2.1 GPM, 95% |
+| 0.0005 | 0.04 × 0.5: 4.8 GPM, 85% | 0.015 × 0.5*: 2.0 GPM, 90% |
+| 0.00075 | 0.08 × 0.5: 10.1 GPM, 88% | 0.015 × 1.0: 3.9 GPM, 86% |
+| 0.001 | 0.125 × 0.5: 16.1 GPM, 87% | 0.025 × 1.5: 9.9 GPM, 87% |
+| 0.0015 | 0.125 × 1.5: 47.5 GPM, 85% | 0.06 × 2.0: 32.2 GPM, 87% |
+| 0.002 | none in the sweep | none in the sweep |
+
+Vane count at the reference size, side gap 0.0005 in, steel vanes, 150 °F:
+
+| Vanes | Outlet, always: vol. eff. | Outlet, always: shaft hp | Switching: vol. eff. | Switching: shaft hp | Switching: lowest tip force (lbf) |
+|---|---|---|---|---|---|
+| 6 | 93.8% | 1.56 | 97.4% | 1.24 | −1.3 |
+| 8 | 93.4% | 1.81 | 97.4% | 1.38 | −1.3 |
+| 10 | 92.8% | 2.05 | 97.5% | 1.51 | −1.3 |
+| 12 | 92.3% | 2.29 | 97.5% | 1.64 | −1.3 |
+
+Vane material barely changes leakage: at the reference size and 150 °F, the three materials are within 1.5 points
+of each other at both 0.0005 and 0.001 in.
+
+#### What it means
+
+1. **The side gap is the main lever.** Leakage across the rotor faces dominates. With the outlet feed, the pump needs
+   a side gap of 0.0005 in or less; with the switching feed, up to about 0.001 in passes the 85% mark at the
+   reference size. Holding 0.0005 in means lapped or ground faces and a tight tolerance on rotor length against ring
+   thickness ([Q31](open-questions.md), [manufacturing.md](manufacturing.md#critical-to-function-features)).
+2. **At 0.0005 in, leakage no longer limits how small the pump can be.** With the switching feed, even the smallest
+   size tried (e = 0.015 in, L = 0.5 in, 2 GPM) passes. The limit then comes from what can be made: at e = 0.02 in, a
+   ±0.001 in error in ring or rotor position is ±5% of the flow. [Q2](open-questions.md) is now a manufacturing
+   question.
+3. **The under-vane feed is the biggest design choice in the model.** Feeding outlet pressure under every vane
+   leaks across the rotor faces from the under-vane groove into the whole inlet half, and presses each vane on the
+   ring with about 9.5 lbf more in the inlet half. With steel vanes, tip friction (1.0 hp) is more than the useful
+   hydraulic power (0.73 hp), and overall efficiency is 40%. The switching feed leaks less (97% against 93%) and
+   wastes less (60–81% overall).
+4. **But with the switching feed the vanes lift off at the two sealing positions,** where one vane separates an
+   outlet pocket from an inlet pocket while it still has inlet pressure under it. The tip sees the average of the two
+   pockets, which outweighs spinning: −1.3 lbf for steel, about −5 lbf for carbon-graphite and PEEK. A lifted vane
+   leaks and chatters. The fix is in the vane design: give the sealing vane outlet pressure underneath (move the
+   groove ends by half a vane pitch), or use intra-vane or chamfered-tip vanes ([Q30](open-questions.md)).
+5. **Light vanes cut friction about threefold.** Carbon-graphite and PEEK press on the ring far less than steel:
+   0.16–0.18 hp of tip friction against 0.51 hp with the switching feed. Lower tip force also means less wear
+   ([vane tip wear](#vane-tip-wear)). They are also the ones that lift off, so they need the fix in point 4.
+6. **Vane count hardly changes leakage, but every vane adds friction.** From 6 to 12 vanes, shaft power rises from
+   1.24 to 1.64 hp (switching) while volumetric efficiency stays at 97%. Fewer vanes are cheaper on both counts; the
+   lower limit comes from pulsation and sealing.
+7. **150 °F sets the size and −20 °F barely changes the torque.** Leakage at −20 °F is a third or less of that at
+   150 °F (viscosity is 3.5× higher). Running torque at −20 °F is only about 2% higher, because friction, not the
+   liquid's drag, dominates. The magnetic coupling sees a peak running torque of 18–33 in·lbf at the reference size,
+   depending on feed and vane. Start-up torque isn't modelled yet.
+8. **Plain ports are adequate for now.** With a 1° land overlap, the pocket trapped at top dead centre peaks at
+   191 psig at −20 °F (outlet feed) and 155 psig (switching). Port notches can wait.
+9. **The vane materials' expansion is acceptable for the grades in the docs.** Carbon-graphite opens the vane-end
+   gap to 0.00066 in at 150 °F and closes it to 0.00032 in at −20 °F; the PEEK wear grade moves less than
+   0.00005 in. Unfilled PEEK (about 26 µstrain/°F) would close the vane-end gap by about 0.0008 in per end at 150 °F
+   and rub, so only filled or wear grades are candidates.
+
+#### Not modelled yet
+
+- Port pressure loss: the ports are ideal until they are sized ([Q29](open-questions.md)).
+- What happens after a vane lifts off: the model flags it and carries on as if the vane stayed on the ring.
+- Compressibility of the liquid in the under-vane spaces, and the switch of those spaces between grooves.
+- Where the bearing and containment-can cavity drains: the face inside the grooves is taken as a dead end
+  ([Q32](open-questions.md)).
+- Rotor tilt, face flatness and deflection under pressure: the side gap is taken as uniform and the rotor as
+  centred between the side plates.
+- Start-up and the breakaway torque the coupling must pass.
+- Cavitation and vapor ([D9](decisions.md)).
+- The balanced layout ([D7](decisions.md)).
 
 ## Vane layout trade study
 
