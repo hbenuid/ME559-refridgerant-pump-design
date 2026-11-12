@@ -50,6 +50,7 @@ All due on the day of the final presentation (date not given yet). Full requirem
 
 | Path | What it holds |
 |---|---|
+| [AGENTS.md](AGENTS.md) | Instructions for AI agents working in this repo: where things go, uv, writing style, git |
 | [docs/requirements.md](docs/requirements.md) | The brief, our interpretation of it, and derived numbers |
 | [docs/open-questions.md](docs/open-questions.md) | Unanswered questions and the working assumptions we use until they're answered |
 | [docs/decisions.md](docs/decisions.md) | Decision log: what was decided, when, and why |
@@ -59,7 +60,7 @@ All due on the day of the final presentation (date not given yet). Full requirem
 | [docs/economics.md](docs/economics.md) | Cost model structure and economic levers |
 | [docs/serviceability.md](docs/serviceability.md) | Field repair, remanufacture and recycling: service routes, design features, repair-vs-swap decision |
 | [docs/references.md](docs/references.md) | Sources |
-| [calcs/](calcs/) | Python calculations. Every number in the docs should trace back to a script here |
+| [calcs/](calcs/) | Python calculations, run with uv (below). Every number in the docs should trace back to a script here |
 | [docs/figures/](docs/figures/) | Graphs written by the calculation scripts (vane-pocket model) |
 | [data/granta/](data/granta/) | Granta EduPack Pass/Fail tables, one per selection project ([materials.md](docs/materials.md#selection-in-granta)) |
 | [notes/](notes/) | Teammates' notes as received (Word). Their content is in the docs ([references.md](docs/references.md#team-notes)) |
@@ -68,15 +69,16 @@ CAD lives in Onshape (link TBD). STEP and PDF snapshots go in `cad/` once they e
 
 ## Running the calculations
 
+The environment is managed with [uv](https://docs.astral.sh/uv/): Python 3.12 (`.python-version`), packages in
+`pyproject.toml`, exact versions in `uv.lock`. `uv run` installs what's missing on first use.
+
 ```sh
-python3 -m venv .venv
-.venv/bin/pip install -r calcs/requirements.txt
-.venv/bin/python calcs/r134a_properties.py
-.venv/bin/python calcs/displacement.py
-.venv/bin/python calcs/reliability.py
-.venv/bin/python calcs/pressure_cases.py
-.venv/bin/python calcs/vane_kinematics.py
-.venv/bin/python calcs/vane_pocket_model.py    # about a minute; also redraws docs/figures/
+uv run calcs/r134a_properties.py
+uv run calcs/displacement.py
+uv run calcs/reliability.py
+uv run calcs/pressure_cases.py
+uv run calcs/vane_kinematics.py
+uv run calcs/vane_pocket_model.py    # about a minute; also redraws docs/figures/
 ```
 
 Each script prints Markdown tables that are pasted into the docs.

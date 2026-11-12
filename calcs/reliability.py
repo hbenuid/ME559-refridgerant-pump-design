@@ -4,7 +4,7 @@ A reliability prediction assumes a constant failure rate during useful life (dec
 so a population that just meets the MTBF follows R(t) = exp(-t / MTBF).
 Prints Markdown tables quoted in docs/functional-design.md.
 
-    python calcs/reliability.py
+    uv run calcs/reliability.py
 """
 from math import exp, log
 

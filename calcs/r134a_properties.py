@@ -5,7 +5,7 @@ density and viscosity at each temperature are the design properties. The actual 
 55 psig inlet is printed alongside to show where that simplification departs from reality.
 Prints Markdown tables quoted in docs/requirements.md.
 
-    python calcs/r134a_properties.py
+    uv run calcs/r134a_properties.py
 """
 from CoolProp.CoolProp import PropsSI
 

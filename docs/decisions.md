@@ -80,6 +80,9 @@ Update (2026-11-10): NumPy and Matplotlib joined CoolProp for the
 [vane-pocket model](functional-design.md#level-1-vane-pocket-model). Its graphs are PNG files in `docs/figures/`,
 written by the script.
 
+Update (2026-11-12): uv manages the Python environment (Python 3.12, `pyproject.toml` and `uv.lock`), in
+place of a pip virtual environment and `calcs/requirements.txt`. Scripts run with `uv run calcs/<script>.py`.
+
 Update (2026-11-12): software available through the university's Citrix, as listed on that date:
 
 | Use | Software |

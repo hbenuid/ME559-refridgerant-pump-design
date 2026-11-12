@@ -11,8 +11,8 @@ Modelling choices agreed on 2026-11-10: single-lobe layout first; side gap swept
 plain port edges (notches later); the vane material sets the vane-end and slot gaps through its expansion; tip
 friction 0.15; ports big enough to have no pressure loss.
 
-    python calcs/vane_pocket_model.py           # checks, sweep, tables and figures (a few minutes)
-    python calcs/vane_pocket_model.py --quick   # checks and the reference pump only, no figures
+    uv run calcs/vane_pocket_model.py           # checks, sweep, tables and figures (a few minutes)
+    uv run calcs/vane_pocket_model.py --quick   # checks and the reference pump only, no figures
 """
 import argparse
 import time

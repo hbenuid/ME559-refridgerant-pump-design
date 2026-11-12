@@ -10,7 +10,7 @@ Balanced double-lobe (cam ring major radius R_a, minor radius R_b = R_r, stroke 
 
 Vane count z and thickness t are placeholders until the vane design is done.
 
-    python calcs/displacement.py
+    uv run calcs/displacement.py
 """
 from math import pi
 
