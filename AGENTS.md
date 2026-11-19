@@ -12,7 +12,10 @@ calculations and design decisions. It is graded on manufacturing, materials, fun
 
 Not everything happens here:
 
-- **CAD** is done by teammates in Onshape. STEP and PDF snapshots go in `cad/`.
+- **CAD** is done by teammates in Onshape, and Onshape stays the master. STEP and PDF snapshots go in `cad/`.
+  Design studies in code, FEA and review drawings use [text-to-cad](https://github.com/earthtojake/text-to-cad),
+  which is installed on one team member's machine only. If the `cad` command isn't there, say so instead of
+  installing it.
 - **Materials** are screened in Granta EduPack and **cost** is estimated in aPriori, both in the university's Citrix.
   People run them; the results come back as exported files (for example `data/granta/*.tsv`) and are written up in
   the docs.
@@ -42,6 +45,10 @@ file wins.
 | A number | `calcs/` | Every number in the docs traces back to a script. Don't type in a computed number by hand. |
 | Topic findings | `docs/` | requirements, functional-design, materials, manufacturing, economics, serviceability. |
 | Teammates' notes | `notes/` | Word files kept as received. Their content is merged into the docs and cited as team notes. |
+| Team CAD | `cad/` | Onshape STEP exports kept as received, dated in the name. Check each new one with `calcs/cad_check.py` and list it in [references.md](docs/references.md#team-cad). |
+| A design study in code | `cad/models/` | A build123d script run with `cad run`, for options the team hasn't drawn (for example a thicker can end). A chosen option goes back to the team for Onshape; the next snapshot is checked here. |
+| An FEA study | `calcs/fea_<part>.py` | Solves with CalculiX through text-to-cad (`cad step solve`) and prints Markdown tables, like any calc. Raw results go in `tmp/` (ignored); stress and deflection images in `docs/figures/fea/`. Check each against a hand estimate. |
+| A review drawing | `cad/drawings/` | A PDF check print from text-to-cad. The deliverable drawings come from Onshape. |
 
 The plan for the analysis is the [order of work](docs/functional-design.md#order-of-work), with the tool for each
 step in [D6](docs/decisions.md#d6-tooling).
@@ -54,6 +61,7 @@ The environment is managed with uv (Python 3.12, `pyproject.toml`, `uv.lock`). D
 ```sh
 uv run calcs/<script>.py      # run a script; uv installs what's missing on first use
 uv add <package>              # add a dependency (updates pyproject.toml and uv.lock)
+cad run cad/models/<script>.py   # a design study; needs text-to-cad, uses this uv environment
 ```
 
 - Scripts print Markdown tables that are pasted into the docs. Each script's docstring says what it computes.

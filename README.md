@@ -61,11 +61,14 @@ All due on the day of the final presentation (date not given yet). Full requirem
 | [docs/serviceability.md](docs/serviceability.md) | Field repair, remanufacture and recycling: service routes, design features, repair-vs-swap decision |
 | [docs/references.md](docs/references.md) | Sources |
 | [calcs/](calcs/) | Python calculations, run with uv (below). Every number in the docs should trace back to a script here |
-| [docs/figures/](docs/figures/) | Graphs written by the calculation scripts (vane-pocket model) |
+| [docs/figures/](docs/figures/) | Graphs written by the calculation scripts (vane-pocket model), the running-pump GIF; FEA images in `fea/` |
 | [data/granta/](data/granta/) | Granta EduPack Pass/Fail tables, one per selection project ([materials.md](docs/materials.md#selection-in-granta)) |
 | [notes/](notes/) | Teammates' notes as received (Word). Their content is in the docs ([references.md](docs/references.md#team-notes)) |
+| [cad/](cad/) | STEP snapshots of the team's Onshape CAD, as received ([references.md](docs/references.md#team-cad)), checked by `calcs/cad_check.py`. `models/` holds design studies in code and the running-pump animation (`pump_running.py`), and `drawings/` review PDFs, all from text-to-cad |
 
-CAD lives in Onshape (link TBD). STEP and PDF snapshots go in `cad/` once they exist.
+CAD lives in Onshape (link TBD) and Onshape is the master. STEP and PDF snapshots go in `cad/`. Design studies, FEA
+and review drawings use [text-to-cad](https://github.com/earthtojake/text-to-cad), installed on one machine only
+([D6](docs/decisions.md#d6-tooling)).
 
 ## Running the calculations
 
@@ -79,6 +82,7 @@ uv run calcs/reliability.py
 uv run calcs/pressure_cases.py
 uv run calcs/vane_kinematics.py
 uv run calcs/vane_pocket_model.py    # about a minute; also redraws docs/figures/
+uv run calcs/cad_check.py            # measures the 2026-11-19 assembly in cad/; give a path for another
 ```
 
 Each script prints Markdown tables that are pasted into the docs.

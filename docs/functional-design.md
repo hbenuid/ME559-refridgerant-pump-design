@@ -357,9 +357,228 @@ of each other at both 0.0005 and 0.001 in.
 - Cavitation and vapor ([D9](decisions.md)).
 - The balanced layout ([D7](decisions.md)).
 
+## CAD check
+
+The team's first full assembly came out of Onshape on 2026-11-19:
+[cad/2026-11-19__Mag_pump_assembly.step](../cad/2026-11-19__Mag_pump_assembly.step), with one STEP per part in
+[cad/2026-11-19__Mag_pump_assembly/](../cad/2026-11-19__Mag_pump_assembly/). It replaced an export from earlier the
+same day that had the same parts but was missing screws. [calcs/cad_check.py](../calcs/cad_check.py) reads the assembly
+and measures it; every number in this section comes from that script. Lengths are in inches. The shaft axis is Y, and
+angles run from the top (+Z), where the rotor comes closest to the ring, towards +X.
+
+### Parts
+
+20 distinct parts, 45 in all. No part has a material assigned in the file.
+
+| Part | Count |
+|---|---|
+| 01 Housing | 1 |
+| 02 Front Cover | 1 |
+| 03 Front End Plate | 1 |
+| 04 Cam Ring | 1 |
+| 05 Rear End Plate | 1 |
+| 06 Rotor | 1 |
+| 07 Vane | 7 |
+| 08 Shaft | 1 |
+| 09 Bushing | 2 |
+| 10 Inner Magnet Hub | 1 |
+| 11 Containment CAN | 1 |
+| 12 Outer Magnet Hub | 1 |
+| 13 Motor Adapter | 1 |
+| 14 Motor | 1 |
+| 15a Rotor Key | 1 |
+| 15b Hub Key | 1 |
+| Hardened ground machine dowel pin 3/16 x 1.5 | 2 |
+| Socket head cap screw 1/4-20 x 0.5 | 6 |
+| Socket head cap screw 3/8-16 x 1 | 8 |
+| Socket head cap screw with low head 5/16-18 x 1.25 | 6 |
+
+### Pumping element
+
+| Item | CAD | Docs |
+|---|---|---|
+| Rotor diameter | 3.1000 | 3.1 ([D5](decisions.md)) |
+| Rotor length L | 0.5788 | Model reference: e = 0.05 in, L = 1.0 in, 8 vanes: 14.1 GPM |
+| Cam ring bore | 3.2460, round (single-lobe) | Layout open ([D7](decisions.md)) |
+| Eccentricity e | 0.0700; ring centre at 180° | — |
+| Rotor to ring at the top | 0.0030 | Model and displacement.py take 0 |
+| Vane stroke (2e) and largest protrusion | 0.1400, 0.1430 | — |
+| Vanes | 7, pitch 51.4° | Model swept 6–12; reference 8 |
+| Vane thickness × height × length | 0.1250 × 0.400 × 0.5786 | displacement.py placeholder t = 0.10 |
+| Vane tip radius | 0.250 | — |
+| Vane left in its slot at full protrusion | 0.257 (64% of its height) | — |
+| Slot-root holes | 7 × 0.188 dia at radius 1.130 | — |
+| Ring thickness | 0.5800 | — |
+| Side gap, rotor (front, rear) | 0.0006, 0.0006 | Model reference 0.0005 ([Q31](open-questions.md)) |
+| Side gap, vane ends (each) | 0.0007 | — |
+| Swept volume | 0.754 in³/rev | — |
+| Ideal flow | 11.75 GPM at 3600 RPM, 11.26 at 3450 | Smallest passing pump 2.0–4.8 GPM at a 0.0005 in side gap ([Q2](open-questions.md)) |
+
+### Ports and under-vane grooves
+
+The front and rear end plates match.
+
+| Item | CAD |
+|---|---|
+| Kidney port, +X side | 30° to 150° (120°) |
+| Kidney port, −X side | 210° to 330° (120°) |
+| Sealing land at 180° | 60°, wider than one vane pitch (51.4°) |
+| Sealing land at 0° | 60°, wider than one vane pitch (51.4°) |
+| Under-vane groove | 2.060 to 2.460 dia, 0.060 deep; slot-root holes at radius 1.130 sit over it |
+| Groove arc, −X side | 220° to 320° (100°), covers no sealing land |
+| Groove arc, +X side | 330° to 210° (240°), covers the sealing lands at 180°, 0° |
+| Groove break at 325° | 10° |
+| Groove break at 215° | 10° |
+| Housing port, −X side | bore 1.547 dia, largest step 2.400 dia |
+| Housing port, +X side | bore 1.234 dia, largest step 2.050 dia |
+| Drilled holes from the can space to the side passages | 2 × 0.125 dia, Y 1.29 to 2.04, on the +X and −X sides |
+
+### Shaft, bushings, coupling and motor
+
+| Item | CAD | Docs |
+|---|---|---|
+| Bushings | 2 flanged sleeves, bore 0.6265, OD 0.875 / 1.125, 1.000 long | Sleeve option of [D16](decisions.md) (open) |
+| Shaft journal, diametral clearance | 0.6250, 0.0015 | — |
+| Bushing centres apart; inner hub centre beyond the rear bushing | 1.580, 2.035 | For step 5 (bearing load) |
+| Containment can | ID 2.440, OD 2.520, wall 0.040, flat end 0.040 thick, flange 0.100 | Material open ([Q28](open-questions.md)) |
+| Inner magnet hub | OD 2.300, Y 2.20 to 3.45 | Magnets not drawn |
+| Outer magnet hub bore | 2.800, Y 2.30 to 4.15 | Magnets not drawn |
+| Radial gaps: inner hub to can, can to outer hub, total | 0.070, 0.140, 0.250 | — |
+| Axial overlap of the two hubs | 1.150 | — |
+| Axial room at the can end: inside (to the inner hub), outside (to the outer hub) | 0.560, 0.100 | — |
+| Motor face: pilot, bolt circle, shaft | 4.500, 5.875, 0.625 | NEMA 56C: pilot (AK) 4.500, bolt circle (AJ) 5.875, shaft (U) 0.625 |
+
+### Containment can at 300 psig
+
+Wall 0.040 in at mean radius 1.240 in; end 0.040 in thick over radius 1.220 in. Compared with the 30,000 psi minimum
+yield of annealed 316 stainless (check), with no safety factor. The formulas are thin-shell and flat-plate hand
+formulas ([Roark](references.md#used), Table 11.2 cases 10a and 10b), not FEA.
+
+| Stress | psi | Times the 316 yield |
+|---|---|---|
+| Tube, hoop (p·r/t) | 9,300 | 0.31 |
+| Tube, axial (p·r/2t) | 4,650 | 0.16 |
+| Flat end, edge held fixed (3pa²/4t²) | 209,306 | 6.98 |
+| Flat end, edge simply supported (3(3+ν)pa²/8t²), at the centre | 345,355 | 11.51 |
+| Hemispherical end of the same 0.040 in (p·r/2t) | 4,650 | 0.15 |
+
+A flat end reaches the yield stress at 0.106 in thick with a fixed edge, or 0.136 in simply supported.
+
+### Bolted joints
+
+| Screw | Through | Hole dia | Holes | Screws placed |
+|---|---|---|---|---|
+| Socket head cap screw 3/8-16 x 1 | 01 Housing | 0.406 | 4 | 4 |
+| Socket head cap screw with low head 5/16-18 x 1.25 | 02 Front Cover | 0.344 | 6 | 6 |
+| Socket head cap screw 1/4-20 x 0.5 | 11 Containment CAN | 0.281 | 6 | 6 |
+| Socket head cap screw 3/8-16 x 1 | 13 Motor Adapter | 0.406 | 4 | 4 |
+
+### Parts that share volume
+
+| Parts | Pairs | in³ each | What it is |
+|---|---|---|---|
+| 01 Housing / 02 Front Cover | 1 | 0.16380 | **Clash**: 0.0625 in deep on the radius, from 4.375 to 4.500 in diameter, Y -1.640 to -1.452 in |
+| 01 Housing / Socket head cap screw 1/4-20 x 0.5 | 6 | 0.00668 | Screw drawn at full size in a tapped hole (expected) |
+| 01 Housing / Socket head cap screw with low head 5/16-18 x 1.25 | 6 | 0.01175 | Screw drawn at full size in a tapped hole (expected) |
+| 03 Front End Plate / Hardened ground machine dowel pin 3/16 x 1.5 | 2 | 0.00003 | Dowel press fit (expected) |
+| 04 Cam Ring / Hardened ground machine dowel pin 3/16 x 1.5 | 2 | 0.00003 | Dowel press fit (expected) |
+| 05 Rear End Plate / Hardened ground machine dowel pin 3/16 x 1.5 | 2 | 0.00002 | Dowel press fit (expected) |
+| 13 Motor Adapter / Socket head cap screw 3/8-16 x 1 | 4 | 0.01962 | Screw drawn at full size in a tapped hole (expected) |
+| 14 Motor / Socket head cap screw 3/8-16 x 1 | 4 | 0.05459 | Motor drawn as a solid block with no tapped holes (expected) |
+
+### Running motion
+
+[cad/models/pump_running.py](../cad/models/pump_running.py) makes the snapshot turn, in text-to-cad. The shaft, rotor,
+keys and inner magnet hub turn as one. The outer hub follows them through the coupling, with slip ignored. Each vane
+slides in its slot so its tip stays on the ring. The STEP draws every vane pushed fully in, so the model moves each
+one out until its tip touches the ring. The rotor turns counterclockwise seen from the front, so the −X port is the
+inlet, as [Q34](open-questions.md) assumes. [figures/pump_running.gif](figures/pump_running.gif) shows one turn at
+1/180 of real speed, with the front cover and front end plate left off.
+
+text-to-cad's interference check, run as built and at six points in the turn, finds no moving part sharing volume with
+another. No vane cuts into the ring or the rotor, and the shaft, rotor and hubs clear the bushings, end plates and
+can. Only the fixed overlaps in the table above remain. The check treats every part as rigid and exact: it says
+nothing about bushing running clearance, deflection or thermal growth.
+
+### What it means
+
+1. **The pump is bigger than the smallest practical one.** The CAD is a single-lobe pump: a round ring offset by
+   e = 0.070 in, a 0.579 in long rotor and 7 vanes. It sweeps 0.754 in³ per turn, 11.75 GPM at 3600 RPM or 11.26 GPM
+   at 3450 RPM. The vane-pocket model passes pumps of 2.0–4.8 GPM at a 0.0005 in side gap, and
+   [D10](decisions.md) asks for the smallest practical pump. The size needs a reason or a cut
+   ([Q33](open-questions.md)).
+2. **The side gaps are close to the model's reference.** They are 0.0006 in per side at the rotor and 0.0007 in at the
+   vane ends, against 0.0005 in in the model. With the switching feed the model passes up to about 0.001 in at its
+   reference size, but it hasn't been run at the CAD's size yet. Holding 0.0006 in still means ground or lapped faces
+   ([Q31](open-questions.md)).
+3. **The under-vane groove looks like the fix for vane lift-off.** Each end plate's groove is split into a 240° arc on
+   the +X side, which runs under both sealing lands, and a 100° arc in the middle of the −X port. Each arc is joined to
+   the port on its side by a shallow notch (seen in the faces, not measured). If +X is the outlet, every vane crossing
+   a sealing land has outlet pressure under it, which is the change the model suggested ([Q30](open-questions.md)).
+   The file doesn't say which port is the inlet or which way the rotor turns ([Q34](open-questions.md)).
+4. **The ports seal.** Each end plate has two 120° kidney ports. The 60° land between them is wider than the 51.4°
+   vane pitch, so a vane always separates inlet from outlet. The housing ports have a 1.547 in bore on −X and a
+   1.234 in bore on +X; the larger one is probably the inlet (check). Their stepped bores may be SAE straight-thread
+   O-ring ports (check with the team; [Q14](open-questions.md), [Q29](open-questions.md)).
+5. **The vanes differ from the model's.** The CAD has 7 vanes, 0.125 in thick and 0.400 in tall, with a 0.25 in tip
+   radius. The model's reference has 8, and `displacement.py` uses 0.10 in as a placeholder thickness. At full
+   protrusion, 0.257 in of each vane (64%) is still in its slot.
+6. **The bearings are sleeves, and the coupling hangs outboard.** Two flanged sleeve bushings in the end plates carry
+   a 0.625 in shaft with 0.0015 in diametral clearance. Their centres are 1.580 in apart, and the inner magnet hub's
+   centre is 2.035 in beyond the rear bushing. This is the sleeve option of [D16](decisions.md), and these lengths go
+   into step 5 of the [order of work](#order-of-work).
+7. **The containment can's flat end is far too thin.** The end is 0.040 in thick, the same as the wall. The tube is
+   fine at 300 psig (9,300 psi hoop stress). The flat end isn't: the hand formulas give 209,306 psi at the edge if it's
+   held fixed and 345,355 psi at the centre if it's simply supported, about 7 and 11.5 times the yield of annealed 316
+   stainless. That is far above the strength of every can material on the list ([materials.md](materials.md))
+   (check). A flat end needs 0.106–0.136 in just to reach yield, before any safety factor. A hemispherical end of the
+   same 0.040 in would see 4,650 psi. There is 0.560 in of room between the inner hub and the can end, so a thicker
+   flat end can grow inwards. A domed end bulges outwards, where there is only 0.100 in before the outer hub, so it
+   needs a deeper outer hub ([Q28](open-questions.md)).
+8. **The coupling can't be checked yet.** The hubs are plain solids with no magnets drawn. The radial gap from the
+   inner hub to the outer hub's bore is 0.250 in (0.070 in inside the can and 0.140 in outside it), and the hubs
+   overlap axially for 1.150 in. Torque comes in step 6.
+9. **The motor is a NEMA 56C face motor.** The adapter has a 4.500 in pilot and a 5.875 in bolt circle, and the motor
+   shaft is 0.625 in, matching NEMA 56C (check). That is the standard motor of [D33](decisions.md).
+10. **The can space drains to both sides.** Two 0.125 in holes run from the space behind the rear end plate to the side
+    passages, one on each side. With one side at outlet pressure, liquid flows from the outlet through the can space
+    to the inlet. That cools the can and bushings but costs volumetric efficiency; the model treats the space as a
+    dead end ([Q32](open-questions.md)).
+11. **The rotor clears the ring by 0.003 in at the top.** The model and `displacement.py` assume they touch. Its effect
+    isn't modelled.
+
+### For the team to fix in the CAD
+
+- **Front cover clash:** a 4.500 in diameter band on the cover sits inside the housing's 4.375 in bore, between
+  Y −1.640 and −1.452 in, 0.0625 in deep on the radius. It may be a groove drawn as a solid ring.
+- **Can end:** thicken it or dome it (point 7).
+- **Materials:** none is assigned to any part.
+- **Not drawn:** magnets, O-rings and seals. The front cover and the can flange are bolted to the housing with no seal
+  drawn at either joint.
+
+### How it was checked
+
+- **By hand:** swept volume 2 × 0.070 × 0.5788 × (π × 3.240 − 7 × 0.125) = 0.754 in³; hoop stress
+  300 × 1.240 / 0.040 = 9,300 psi; flat end with a fixed edge 3 × 300 × 1.220² / (4 × 0.040²) = 209,306 psi. All match
+  the script. `displacement.py` takes the ring as D_r + 2e = 3.240 in rather than the CAD's 3.246 in, so its swept
+  volume is very slightly low.
+- **With a second STEP reader:** text-to-cad's `cad` tool (2026-11-19) gave the same sizes and the same overlap
+  volumes. Both use the OpenCascade kernel, so this checks the script's logic, not the kernel.
+- **Built into the script:** it stops with an error if the rotor isn't 3.1 in, if the end plates don't close the ring
+  faces, if the ports don't follow the ring bore, or if the two end plates are ported differently.
+- **Validation:** none yet. The can formulas are to be checked against Roark.
+
+### Not checked
+
+- Which port is the inlet and which way the rotor turns ([Q34](open-questions.md)).
+- Tolerances and surface finish: a STEP file has none, so the 0.0006 in gaps are nominal.
+- The can by FEA (step 8). The real edge of the can end lies between the two plate cases above.
+- The front cover, housing and bolts at 300 psig.
+- Magnet torque (step 6).
+
 ## Vane layout trade study
 
-Decision [D7](decisions.md) is open.
+Decision [D7](decisions.md) is open. The team's CAD of 2026-11-19 is single-lobe ([CAD check](#cad-check)).
 
 | Factor | Single-lobe (eccentric round ring) | Balanced double-lobe (elliptical cam ring) |
 |---|---|---|
@@ -379,7 +598,8 @@ the cost difference of the non-circular ring at 7,000/yr (see [manufacturing.md]
 ## Bearing trade study
 
 Decision [D16](decisions.md) is open. Liquid R-134a (0.11–0.29 cSt) gives almost no lubricating film, so the bearing
-choice largely sets wear life.
+choice largely sets wear life. The team's CAD of 2026-11-19 uses two flanged sleeve bushings
+([CAD check](#cad-check)).
 
 | Factor | Product-lubricated sleeve (carbon-graphite or SiC) | Rolling-element (hybrid ceramic) |
 |---|---|---|
@@ -411,6 +631,9 @@ housing closes the pressure boundary, so the pump has no shaft seal.
 | Containment can | Holds the 300 psig design pressure ([D32](decisions.md)) inside the magnetic gap. A metal can heats the liquid with eddy currents; a non-metallic one doesn't ([Q28](open-questions.md), [Q22](open-questions.md)). |
 | Magnets | Neodymium magnets lose strength when hot, so the grade is checked against the hottest liquid. The inner rotor's magnets are encapsulated so refrigerant and oil never touch them. |
 | Service | The motor changes on site without opening the refrigerant circuit ([serviceability.md](serviceability.md)). |
+
+The team's CAD of 2026-11-19 has a NEMA 56C face motor, a 0.040 in can with a flat end that is too thin for 300 psig,
+and no magnets drawn yet ([CAD check](#cad-check)).
 
 ## Functional risks
 
