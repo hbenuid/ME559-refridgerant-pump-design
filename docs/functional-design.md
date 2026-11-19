@@ -486,6 +486,20 @@ A flat end reaches the yield stress at 0.106 in thick with a fixed edge, or 0.13
 | 13 Motor Adapter / Socket head cap screw 3/8-16 x 1 | 4 | 0.01962 | Screw drawn at full size in a tapped hole (expected) |
 | 14 Motor / Socket head cap screw 3/8-16 x 1 | 4 | 0.05459 | Motor drawn as a solid block with no tapped holes (expected) |
 
+### Running motion
+
+[cad/models/pump_running.py](../cad/models/pump_running.py) makes the snapshot turn, in text-to-cad. The shaft, rotor,
+keys and inner magnet hub turn as one. The outer hub follows them through the coupling, with slip ignored. Each vane
+slides in its slot so its tip stays on the ring. The STEP draws every vane pushed fully in, so the model moves each
+one out until its tip touches the ring. The rotor turns counterclockwise seen from the front, so the −X port is the
+inlet, as [Q34](open-questions.md) assumes. [figures/pump_running.gif](figures/pump_running.gif) shows one turn at
+1/180 of real speed, with the front cover and front end plate left off.
+
+text-to-cad's interference check, run as built and at six points in the turn, finds no moving part sharing volume with
+another. No vane cuts into the ring or the rotor, and the shaft, rotor and hubs clear the bushings, end plates and
+can. Only the fixed overlaps in the table above remain. The check treats every part as rigid and exact: it says
+nothing about bushing running clearance, deflection or thermal growth.
+
 ### What it means
 
 1. **The pump is bigger than the smallest practical one.** The CAD is a single-lobe pump: a round ring offset by
