@@ -59,6 +59,18 @@ Add each source when it is first used, and say what it's used for. Mark anything
   9,644,245).
 - Course handout, *Final Report and Presentation* (headed ME500). Not kept in the repo; its content is recorded in
   [final deliverables](requirements.md#final-deliverables).
+- Young, W. C., Budynas, R. G. (2002). *Roark's Formulas for Stress and Strain*, 7th ed. McGraw-Hill. Table 11.2,
+  cases 10a and 10b: a solid circular plate under uniform pressure, edge simply supported or fixed. Used for the
+  containment can's end in the [CAD check](functional-design.md#cad-check). The formulas are not yet checked against
+  the book (check).
+- ASTM A240, *Chromium and Chromium-Nickel Stainless Steel Plate, Sheet, and Strip*. Minimum yield of 316,
+  30,000 psi, used as the yardstick for the can in the [CAD check](functional-design.md#cad-check) (check).
+- NEMA MG 1, *Motors and Generators*. The 56C face: 4.500 in pilot (AK), 5.875 in bolt circle (AJ), 0.625 in shaft
+  (U). Used to identify the motor in the [CAD check](functional-design.md#cad-check) (check).
+- build123d, a Python CAD library on the OpenCascade kernel (<https://github.com/gumyr/build123d>). Reads the STEP
+  files in [calcs/cad_check.py](../calcs/cad_check.py).
+- text-to-cad (<https://github.com/earthtojake/text-to-cad>), version 0.11.11. A second STEP reader for the
+  [CAD check](functional-design.md#cad-check): the same sizes and overlap volumes.
 
 ## Team notes
 
@@ -79,6 +91,16 @@ reproduced in [calcs/pressure_cases.py](../calcs/pressure_cases.py) and
   range (−20 °F to 50 °F at the inlet), outlet temperature rise, and the 263 psig idle pressure behind the 300 psig
   rating. Used in [requirements.md](requirements.md#real-fluid-check) and
   [D32](decisions.md#d32-design-pressure-300-psig-from-the-idle-case).
+
+## Team CAD
+
+Onshape exports from teammates, kept as received in [cad/](../cad/).
+
+- *Mag_pump_assembly*, exported 2026-11-19: the assembly
+  ([cad/2026-11-19__Mag_pump_assembly.step](../cad/2026-11-19__Mag_pump_assembly.step)) and one STEP per part
+  ([cad/2026-11-19__Mag_pump_assembly/](../cad/2026-11-19__Mag_pump_assembly/)). Measured by
+  [calcs/cad_check.py](../calcs/cad_check.py) and written up in the [CAD check](functional-design.md#cad-check). It
+  replaced an export from earlier the same day that had the same parts but was missing screws.
 
 ## To consult
 

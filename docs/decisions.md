@@ -10,7 +10,7 @@ One entry per decision. Never delete an entry; if a decision is reversed, add a 
 | D4 | 2026-10-22 | Hermetic construction, motor inside the shell | Shell closure refined by D13; motor moved outside by D33 |
 | D5 | 2026-10-22 | Rotor diameter fixed at 3.1 in | Constraint |
 | D6 | 2026-10-22 | Tooling: Python + CoolProp for calcs, Onshape for CAD, Markdown in this repo for documentation; aPriori for cost (2026-11-12) | Decided; analysis tools per step proposed ([below](#d6-tooling)) |
-| D7 | — | Vane layout: single-lobe eccentric vs. balanced double-lobe | **Open**: trade study in [functional-design.md](functional-design.md#vane-layout-trade-study) |
+| D7 | — | Vane layout: single-lobe eccentric vs. balanced double-lobe | **Open**: trade study in [functional-design.md](functional-design.md#vane-layout-trade-study); the team's CAD of 2026-11-19 is single-lobe |
 | D8 | — | Lubrication assumption: oil-free vs. oil present | **Open** ([Q3](open-questions.md)) |
 | D9 | 2026-10-22 | The fluid is liquid at all times over −20 °F to 150 °F | Decided (course guidance) |
 | D10 | 2026-10-22 | Size the smallest practical pump; flow follows from the geometry | Decided; values open ([Q2](open-questions.md)) |
@@ -19,7 +19,7 @@ One entry per decision. Never delete an entry; if a decision is reversed, add a 
 | D13 | 2026-10-22 | Semi-hermetic: bolted housing with O-ring joints instead of a welded shell | Bolted housing decided; motor moved outside by D33 |
 | D14 | 2026-10-22 | Field-maintainable where life-cycle cost justifies it, otherwise factory-refurbishable; recyclable at end of life. A refrigeration technician does field repair. | Decided; cost data open ([Q13](open-questions.md)) |
 | D15 | 2026-10-22 | Inlet and outlet isolation valves built into the pump | Decided |
-| D16 | — | Bearing type: product-lubricated sleeve vs. rolling-element | **Open**: trade study in [functional-design.md](functional-design.md#bearing-trade-study) |
+| D16 | — | Bearing type: product-lubricated sleeve vs. rolling-element | **Open**: trade study in [functional-design.md](functional-design.md#bearing-trade-study); the team's CAD of 2026-11-19 uses sleeve bushings |
 | D17 | 2026-10-22 | The 50,000 h MTBF applies to the pump mechanism only | Decided |
 | D18 | 2026-10-22 | Tooling is amortized over 5 years of production (35,000 units) | Decided |
 | D19 | 2026-10-29 | Part numbers are assembly-coded | Decided; ranges to finalize with the part list |
@@ -124,6 +124,21 @@ These are set, not proposed:
 
 Ansys Mechanical and Fluent are the options that matter most: industry uses them for steps 8 and 9, and they handle
 contact, heat and vibration, which the CalculiX setup here (linear static only) doesn't.
+
+Update (2026-11-19): build123d, a Python CAD library, joined the uv environment. It reads the team's STEP snapshots
+in [calcs/cad_check.py](../calcs/cad_check.py) ([CAD check](functional-design.md#cad-check)).
+
+Update (2026-11-19): [text-to-cad](https://github.com/earthtojake/text-to-cad) 0.11.11 is set up for four jobs. It is
+installed on one team member's machine only, not for the whole team.
+
+| Job | How | Where |
+|---|---|---|
+| Inspect the team's STEP snapshots | CAD Viewer, `cad step inspect` and `cad step interference`, beside `calcs/cad_check.py` | `cad/` |
+| FEA (step 8) | CalculiX through `cad step solve`, run from a calcs script | `calcs/fea_<part>.py`; images in `docs/figures/fea/` |
+| Design studies in code | build123d scripts run with `cad run`, for options the team hasn't drawn | `cad/models/` |
+| Review drawings | PDF check prints only. The deliverable drawings come from Onshape. | `cad/drawings/` |
+
+Onshape stays the master. A study chosen here goes back to the team for Onshape, and the next snapshot is checked.
 
 ## D9: Liquid at all times
 
